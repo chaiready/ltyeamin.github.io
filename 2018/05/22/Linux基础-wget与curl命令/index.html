@@ -1,0 +1,462 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="彤哥哥的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <link rel="dns-prefetch" href="http://ltyeamin.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="Linux">
+
+
+    <meta name="description" content="Linux系统下的下载工具wget 是一个从网络上自动下载文件的自由工具,支持通过 HTTP,HTTPS,FTP 三个最常见的 TCP/IP协议 下载,并可以使用 HTTP 代理.”wget” ...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+
+<title>Linux基础-wget与curl命令 | 彤哥哥的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="彤哥哥的博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+<script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+<link rel="stylesheet" href="/css/calendar.css?rev=@@hash">
+<link rel="stylesheet" href="/css/variable.css?rev=@@hash">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?ebfd000c0e7cc1ee84a00f01d419b1e2";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header" style="background-image:url(http://snippet.shenliyang.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="YeaMin">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                 <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://ltyeamin.github.io">彤哥哥的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa"></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/backend/"><i class="fa"></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/frontend/"><i class="fa"></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/ops/"><i class="fa"></i>运维</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/database/"><i class="fa"></i>数据库</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/algorithm/"><i class="fa"></i>算法</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/pm/"><i class="fa"></i>项目管理</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href=""><i class="fa"></i>自媒体</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/others/"><i class="fa"></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/about"><i class="fa /favicon.ico"></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Linux基础-wget与curl命令">
+            
+	            Linux基础-wget与curl命令
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/ops/">ops</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Linux/">Linux</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2018/05/22</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+            <p class="fa fa-exclamation-triangle warning">
+                本文于<strong>382</strong>天之前发表，文中内容可能已经过时
+            </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="Linux系统下的下载工具"><a href="#Linux系统下的下载工具" class="headerlink" title="Linux系统下的下载工具"></a>Linux系统下的下载工具</h2><p>wget 是一个从网络上自动下载文件的自由工具,支持通过 HTTP,HTTPS,FTP 三个最常见的 TCP/IP协议 下载,并可以使用 HTTP 代理.”wget” 这个名称来源于 “World Wide Web” 与 “get” 的结合.<br>所谓自动下载,是指 wget 可以在用户退出系统的之后在继续后台执行,直到下载任务完成.  </p>
+<h3 id="命令选项"><a href="#命令选项" class="headerlink" title="命令选项"></a>命令选项</h3><ul>
+<li>-a&lt;日志文件&gt;:在指定的日志文件中记录资料的执行过程;  </li>
+<li>-A&lt;后缀名&gt;:指定要下载文件的后缀名,多个后缀名之间使用逗号进行分隔;  </li>
+<li>-b:进行后台的方式运行wget;  </li>
+<li>-B&lt;连接地址&gt;:设置参考的连接地址的基地地址;  </li>
+<li>-c:继续执行上次终端的任务,断点续传;  </li>
+<li>-C&lt;标志&gt;:设置服务器数据块功能标志on为激活,off为关闭,默认值为on;  </li>
+<li>-d:调试模式运行指令;  </li>
+<li>-D&lt;域名列表&gt;:设置顺着的域名列表,域名之间用”,”分隔;  </li>
+<li>-e&lt;指令&gt;:作为文件”.wgetrc”中的一部分执行指定的指令;  </li>
+<li>-h:显示指令帮助信息;  </li>
+<li>-i&lt;文件&gt;:从指定文件获取要下载的URL地址;  </li>
+<li>-l&lt;目录列表&gt;:设置顺着的目录列表,多个目录用”,”分隔;  </li>
+<li>-L:仅顺着关联的连接;  </li>
+<li>-O: 将要下载的文件进行重命名</li>
+<li>-r:递归下载方式;  </li>
+<li>-nc:文件存在时,下载文件不覆盖原有文件;  </li>
+<li>-nv:下载时只显示更新和出错信息,不显示指令的详细执行过程;  </li>
+<li>-q:不显示指令执行过程;  </li>
+<li>-nh:不查询主机名称;  </li>
+<li>-v:显示详细执行过程; </li>
+<li>-V:显示版本信息;  </li>
+<li>–passive-ftp:使用被动模式PASV连接FTP服务器;  </li>
+<li>–follow-ftp:从HTML文件中下载FTP连接文件.  <h3 id="参考示例"><a href="#参考示例" class="headerlink" title="参考示例"></a>参考示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">1.下载网络资源</span><br><span class="line">[root@litong ~]# wget https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz   #使用wget下载Python安装包</span><br><span class="line">--2018-05-22 16:57:49--  https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz</span><br><span class="line">Resolving www.python.org (www.python.org)... 151.101.8.223, 2a04:4e42:2::223</span><br><span class="line">Connecting to www.python.org (www.python.org)|151.101.8.223|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 22994617 (22M) [application/octet-stream]</span><br><span class="line">Saving to: ‘Python-3.6.5.tgz’</span><br><span class="line"></span><br><span class="line">100%[=============================================================================================================&amp;gt;] 22,994,617  27.6MB/s   in 0.8s   </span><br><span class="line"></span><br><span class="line">2018-05-22 16:57:50 (27.6 MB/s) - ‘Python-3.6.5.tgz’ saved [22994617/22994617]</span><br><span class="line"></span><br><span class="line">[root@litong ~]# ll | grep Python</span><br><span class="line">-rw-r--r-- 1 root root 22994617 Mar 28 18:24 Python-3.6.5.tgz</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>2.断点续传<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# wget -c http://d1.music.126.net/dmusic/netease-cloud-music_1.1.0_amd64_ubuntu.deb  #下载Linux版本的网易云音乐</span><br><span class="line">--2018-05-22 17:04:04--  http://d1.music.126.net/dmusic/netease-cloud-music_1.1.0_amd64_ubuntu.deb</span><br><span class="line">Resolving d1.music.126.net (d1.music.126.net)... 157.185.168.24</span><br><span class="line">Connecting to d1.music.126.net (d1.music.126.net)|157.185.168.24|:80... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 68515076 (65M) [application/octet-stream]</span><br><span class="line">Saving to: ‘netease-cloud-music_1.1.0_amd64_ubuntu.deb’</span><br><span class="line">46% [====================================================================&amp;gt;                                                                                 ] 31,560,638  15.2MB/s             ^C           #按下Ctrl+C终止下载</span><br><span class="line">[root@litong ~]# wget -c http://d1.music.126.net/dmusic/netease-cloud-music_1.1.0_amd64_ubuntu.deb  #端点续传,继续下载,不会重新下载</span><br><span class="line">--2018-05-22 17:04:09--  http://d1.music.126.net/dmusic/netease-cloud-music_1.1.0_amd64_ubuntu.deb</span><br><span class="line">Resolving d1.music.126.net (d1.music.126.net)... 157.185.168.24</span><br><span class="line">Connecting to d1.music.126.net (d1.music.126.net)|157.185.168.24|:80... connected.</span><br><span class="line">HTTP request sent, awaiting response... 206 Partial Content</span><br><span class="line">Length: 68515076 (65M), 33805218 (32M) remaining [application/octet-stream]</span><br><span class="line">Saving to: ‘netease-cloud-music_1.1.0_amd64_ubuntu.deb’</span><br><span class="line">100%[+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==========================================================================&amp;gt;] 68,515,076  14.7MB/s   in 2.2s   </span><br><span class="line">Last-modified header invalid -- time-stamp ignored.</span><br><span class="line">2018-05-22 17:04:12 (14.7 MB/s) - ‘netease-cloud-music_1.1.0_amd64_ubuntu.deb’ saved [68515076/68515076]</span><br></pre></td></tr></table></figure></p>
+<p>3.后台下载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# wget -b https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz &amp;&amp; tail -50f wget-log  #后台下载并查看下载日志.下载并不阻塞Shell交互</span><br><span class="line">Continuing in background, pid 301.</span><br><span class="line">Output will be written to ‘wget-log’.</span><br><span class="line">--2018-05-22 17:14:55--  https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tgz</span><br><span class="line">Resolving www.python.org (www.python.org)... 151.101.8.223, 2a04:4e42:2::223</span><br><span class="line">Connecting to www.python.org (www.python.org)|151.101.8.223|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 22994617 (22M) [application/octet-stream]</span><br><span class="line">Saving to: ‘Python-3.6.5.tgz’</span><br><span class="line">0K     .......... .......... .......... .......... ..........  0% 17.2M 1s</span><br><span class="line">50K    .......... .......... .......... .......... ..........  0% 23.7M 1s</span><br><span class="line">100K   .......... .......... .......... .......... ..........  0% 33.3M 1s</span><br><span class="line">150K   .......... .......... .......... .......... ..........  0% 22.4M 1s</span><br><span class="line">200K   .......... .......... .......... .......... ..........  1% 34.5M 1s</span><br><span class="line">250K   .......... .......... .......... .......... ..........  1% 32.9M 1s</span><br><span class="line">       .......... .......... .......... .......... ..........</span><br><span class="line">22250K .......... .......... .......... .......... .......... 99% 13.2M 0s</span><br><span class="line">22300K .......... .......... .......... .......... .......... 99% 10.7M 0s</span><br><span class="line">22350K .......... .......... .......... .......... .......... 99% 12.4M 0s</span><br><span class="line">22400K .......... .......... .......... .......... .......... 99% 14.3M 0s</span><br><span class="line">22450K .....                                                 100%  129M=0.8s</span><br><span class="line">2018-05-22 17:14:56 (27.7 MB/s) - ‘Python-3.6.5.tgz’ saved [22994617/22994617]</span><br></pre></td></tr></table></figure></p>
+<h2 id="测试接口常用的curl"><a href="#测试接口常用的curl" class="headerlink" title="测试接口常用的curl"></a>测试接口常用的curl</h2><p>curl是利用URL语法在命令行方式下工作的开源文件传输工具.它支持文件的上传和下载,所以是综合传输工具.<br>curl支持包括HTTP,HTTPS,ftp等众多协议,还支持POST,cookies认证,从指定偏移处下载部分文件,用户代理字符串,限速,文件大小,进度条等特征.做网页处理流程和数据检索自动化,curl可以祝一臂之力.    </p>
+<h3 id="参考示例-1"><a href="#参考示例-1" class="headerlink" title="参考示例"></a>参考示例</h3><p>1.简单请求<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# curl http<span class="variable">s:</span>//www.baidu.<span class="keyword">com</span>  #简单GET请求请求百度</span><br><span class="line">&amp;lt;!DOCTYPE html&amp;gt;</span><br><span class="line">&amp;lt;!--STATUS OK--&amp;gt;&amp;lt;html&amp;gt; &amp;lt;head&amp;gt;&amp;lt;meta http-equiv=content-type content=text/html;charset=utf-8&amp;gt;&amp;lt;meta http-equiv=X-UA-Compatible content=IE=Edge&amp;gt;&amp;lt;meta content=always name=referrer&amp;gt;&amp;lt;link rel=stylesheet type=text/css href=https://ss1.bdstatic.com/5eN1bjq8AAUYm2zgoY3K/r/www/cache/bdorz/baidu.min.css&amp;gt;&amp;lt;title&amp;gt;百度一下,你就知道&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt; &amp;lt;body link=#0000cc&amp;gt; &amp;lt;div id=wrapper&amp;gt; &amp;lt;div id=head&amp;gt; &amp;lt;div class=head_wrapper&amp;gt; &amp;lt;div class=s_form&amp;gt; &amp;lt;div class=s_form_wrapper&amp;gt; &amp;lt;div id=lg&amp;gt; &amp;lt;img hidefocus=true src=//www.baidu.com/img/bd_logo1.png width=270 height=129&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;form id=form name=f action=//www.baidu.com/s class=fm&amp;gt; &amp;lt;input type=hidden name=bdorz_come value=1&amp;gt; &amp;lt;input type=hidden name=ie value=utf-8&amp;gt; &amp;lt;input type=hidden name=f value=8&amp;gt; &amp;lt;input type=hidden name=rsv_bp value=1&amp;gt; &amp;lt;input type=hidden name=rsv_idx value=1&amp;gt; &amp;lt;input type=hidden name=tn value=baidu&amp;gt;&amp;lt;span class="bg s_ipt_wr"&amp;gt;&amp;lt;input id=kw name=wd class=s_ipt value maxlength=255 autocomplete=off autofocus=autofocus&amp;gt;&amp;lt;/span&amp;gt;&amp;lt;span class="bg s_btn_wr"&amp;gt;&amp;lt;input type=submit id=su value=百度一下 class="bg s_btn" autofocus&amp;gt;&amp;lt;/span&amp;gt; &amp;lt;/form&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div id=u1&amp;gt; &amp;lt;a href=http://news.baidu.com name=tj_trnews class=mnav&amp;gt;新闻&amp;lt;/a&amp;gt; &amp;lt;a href=https://www.hao123.com name=tj_trhao123 class=mnav&amp;gt;hao123&amp;lt;/a&amp;gt; &amp;lt;a href=http://map.baidu.com name=tj_trmap class=mnav&amp;gt;地图&amp;lt;/a&amp;gt; &amp;lt;a href=http://v.baidu.com name=tj_trvideo class=mnav&amp;gt;视频&amp;lt;/a&amp;gt; &amp;lt;a href=http://tieba.baidu.com name=tj_trtieba class=mnav&amp;gt;贴吧&amp;lt;/a&amp;gt; &amp;lt;noscript&amp;gt; &amp;lt;a href=http://www.baidu.com/bdorz/login.gif?login&amp;amp;tpl=mn&amp;amp;u=http%3A%2F%2Fwww.baidu.com%2f%3fbdorz_come%3d1 name=tj_login class=lb&amp;gt;登录&amp;lt;/a&amp;gt; &amp;lt;/noscript&amp;gt; &amp;lt;script&amp;gt;document.write('&amp;lt;a href="http://www.baidu.com/bdorz/login.gif?login&amp;tpl=mn&amp;u='+ encodeURIComponent(window.location.href+ (window.location.search === "" ? "?" : "&amp;")+ "bdorz_come=1")+ '" name="tj_login" class="lb"&amp;gt;登录&amp;lt;/a&amp;gt;');</span><br><span class="line">                &amp;lt;/script&amp;gt; &amp;lt;a href=//www.baidu.com/more/ name=tj_briicon class=bri style="display: block;"&amp;gt;更多产品&amp;lt;/a&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;div id=ftCon&amp;gt; &amp;lt;div id=ftConw&amp;gt; &amp;lt;p id=lh&amp;gt; &amp;lt;a href=http://home.baidu.com&amp;gt;关于百度&amp;lt;/a&amp;gt; &amp;lt;a href=http://ir.baidu.com&amp;gt;About Baidu&amp;lt;/a&amp;gt; &amp;lt;/p&amp;gt; &amp;lt;p id=cp&amp;gt;&amp;copy;2017&amp;nbsp;Baidu&amp;nbsp;&amp;lt;a href=http://www.baidu.com/duty/&amp;gt;使用百度前必读&amp;lt;/a&amp;gt;&amp;nbsp; &amp;lt;a href=http://jianyi.baidu.com/ class=cp-feedback&amp;gt;意见反馈&amp;lt;/a&amp;gt;&amp;nbsp;京ICP证030173号&amp;nbsp; &amp;lt;img src=//www.baidu.com/img/gs.gif&amp;gt; &amp;lt;/p&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt;</span><br></pre></td></tr></table></figure></p>
+<p>2.缓存(下载)<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# curl -<span class="keyword">o</span> baidu.html http<span class="variable">s:</span>//www.baidu.<span class="keyword">com</span>  #将百度首页保存成html本地文件</span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line"><span class="number">100</span>  <span class="number">2443</span>  <span class="number">100</span>  <span class="number">2443</span>    <span class="number">0</span>     <span class="number">0</span>  <span class="number">10319</span>      <span class="number">0</span> --:--:-- --:--:-- --:--:-- <span class="number">10351</span></span><br><span class="line">[root@litong ~]# <span class="keyword">cat</span> baidu.html </span><br><span class="line">&amp;lt;!DOCTYPE html&amp;gt;</span><br><span class="line">&amp;lt;!--STATUS OK--&amp;gt;&amp;lt;html&amp;gt; &amp;lt;head&amp;gt;&amp;lt;meta http-equiv=content-type content=text/html;charset=utf-8&amp;gt;&amp;lt;meta http-equiv=X-UA-Compatible content=IE=Edge&amp;gt;&amp;lt;meta content=always name=referrer&amp;gt;&amp;lt;link rel=stylesheet type=text/css href=https://ss1.bdstatic.com/5eN1bjq8AAUYm2zgoY3K/r/www/cache/bdorz/baidu.min.css&amp;gt;&amp;lt;title&amp;gt;百度一下,你就知道&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt; &amp;lt;body link=#0000cc&amp;gt; &amp;lt;div id=wrapper&amp;gt; &amp;lt;div id=head&amp;gt; &amp;lt;div class=head_wrapper&amp;gt; &amp;lt;div class=s_form&amp;gt; &amp;lt;div class=s_form_wrapper&amp;gt; &amp;lt;div id=lg&amp;gt; &amp;lt;img hidefocus=true src=//www.baidu.com/img/bd_logo1.png width=270 height=129&amp;gt; &amp;lt;/div&amp;gt; </span><br><span class="line">... #省略片段</span><br><span class="line">[root@litong ~]# curl -<span class="keyword">o</span> Python-<span class="number">3.5</span>.<span class="number">5</span>.tgz http<span class="variable">s:</span>//www.<span class="keyword">python</span>.org/ftp/<span class="keyword">python</span>/<span class="number">3.5</span>.<span class="number">5</span>/Python-<span class="number">3.5</span>.<span class="number">5</span>.tgz  #替换wget命令下载Python,断点续传-C</span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line"><span class="number">100</span> <span class="number">19.8</span>M  <span class="number">100</span> <span class="number">19.8</span>M    <span class="number">0</span>     <span class="number">0</span>  <span class="number">29.0</span>M      <span class="number">0</span> --:--:-- --:--:-- --:--:-- <span class="number">29.0</span>M</span><br><span class="line">[root@litong ~]# <span class="keyword">ll</span> | <span class="keyword">grep</span> Python</span><br><span class="line">-rw-r--r-- <span class="number">1</span> root root <span class="number">20766931</span> May <span class="number">22</span> <span class="number">17</span>:<span class="number">38</span> Python-<span class="number">3.5</span>.<span class="number">5</span>.tgz</span><br></pre></td></tr></table></figure></p>
+<p>3.请求方式设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# curl -H &quot;Content-Type:application/json&quot; -X POST -d &apos;&#123; &quot;arg&quot;: 125086 &#125;&apos; http://47.67.44.121:9130/learning-path/tree/queryPhaseAndSubject  #以json的方式进行请求</span><br><span class="line">% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100   231    0   214  100    17    214     17  0:00:01 --:--:--  0:00:01 14437</span><br><span class="line">&#123;&quot;message&quot;:null,&quot;result&quot;:&quot;success&quot;,&quot;data&quot;:[&#123;&quot;subjectId&quot;:&quot;4267aa39-6ecb-40b7-8e10-7b309d022aec&quot;,&quot;subjectName&quot;:&quot;语文&quot;,&quot;phaseId&quot;:&quot;c7241629-1ec4-4035-b04c-ef17f7866688&quot;,&quot;phaseName&quot;:&quot;高中&quot;&#125;],&quot;code&quot;:0,&quot;success&quot;:true&#125;</span><br></pre></td></tr></table></figure></p>
+<p>4.设置referer<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# curl --referer http://www.google.<span class="keyword">com</span> http://www.baidu.<span class="keyword">com</span></span><br></pre></td></tr></table></figure></p>
+<p>5.设置User-Agent<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# curl -A <span class="string">"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36"</span> http://www.baidu.<span class="keyword">com</span></span><br></pre></td></tr></table></figure></p>
+<p>6.设置cookie<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# curl  --cookie <span class="string">"user=litong"</span> http://www.baidu.<span class="keyword">com</span></span><br></pre></td></tr></table></figure></p>
+<p>7.设置请求头<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# curl  -H <span class="string">"accept-language:zh-cn"</span> http://www.baidu.<span class="keyword">com</span></span><br></pre></td></tr></table></figure></p>
+<p>8.进行认证<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# curl  -<span class="keyword">u</span> liton<span class="variable">g:0517108</span> http://www.gitlab.<span class="keyword">com</span>/users/sign_in</span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0&amp;lt;!                                                                                                                DOCTYPE html&amp;gt;</span><br><span class="line">&amp;lt;html class="devise-layout-html"&amp;gt;</span><br><span class="line">&amp;lt;head prefix="og: http://ogp.me/ns#"&amp;gt;</span><br><span class="line">&amp;lt;meta charset="utf-8"&amp;gt;</span><br><span class="line">&amp;lt;meta content="IE=edge" http-equiv="X-UA-Compatible"&amp;gt;</span><br><span class="line">&amp;lt;meta content="object" property="og:type"&amp;gt;</span><br><span class="line">&amp;lt;meta content="GitLab" property="og:site_name"&amp;gt;</span><br><span class="line">&amp;lt;meta content="Sign in" property="og:title"&amp;gt;</span><br><span class="line">&amp;lt;meta content="GitLab Community Edition" property="og:description"&amp;gt;</span><br><span class="line">...省略片段</span><br></pre></td></tr></table></figure></p>
+<p>9.上传文件<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> [root@litong ~]# curl http://<span class="number">127.0</span>.<span class="number">0.1</span>/<span class="keyword">up</span> -F <span class="string">"file=@logo.png"</span></span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line"><span class="number">100</span>  <span class="number">4616</span>    <span class="number">0</span>    <span class="number">76</span>  <span class="number">100</span>  <span class="number">4540</span>     <span class="number">76</span>   <span class="number">4540</span>  <span class="number">0</span>:<span class="number">00</span>:<span class="number">01</span> --:--:--  <span class="number">0</span>:<span class="number">00</span>:<span class="number">01</span>  <span class="number">8213</span>&#123;<span class="string">"hash"</span>:<span class="string">"FmP639IPMcunQpiXidRPNisi2lDp"</span>,<span class="string">"key"</span>:<span class="string">"FmP639IPMcunQpiXidRPNisi2lDp"</span>&#125;</span><br></pre></td></tr></table></figure></p>
+    </div>
+    
+        <div class="reward" ontouchstart="">
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/about/alipay.png"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/about/weixin.png"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">请作者喝杯咖啡吧</p>
+
+    <!-- 社会分享工具 -->
+    <div class="bdsharebuttonbox">
+         <a href="#" class="bds_more" data-cmd="more"></a>
+         <a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+         <a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a>
+         <a href="#" class="bds_weixin" data-cmd="weixin"></a>
+    </div>
+     <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+     </script>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">彤哥哥</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2018/05/22/Linux基础-正则表达式之三剑客/" class="pre-post btn btn-default" title="Linux基础-正则表达式之三剑客">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Linux基础-正则表达式之三剑客</span>
+        </a>
+    
+    
+        <a href="/2018/05/18/自定义一个Spring Boot Starter/" class="next-post btn btn-default" title="自定义一个Spring Boot Starter">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">自定义一个Spring Boot Starter</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'wA3iNQOiAuhrRJkNgIjirA8f-gzGzoHsz',
+            appKey: 'iGL0JyEnJQ8HIMlLd4Sm0oOp',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail,link'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+    </div>
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux系统下的下载工具"><span class="toc-text">Linux系统下的下载工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令选项"><span class="toc-text">命令选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考示例"><span class="toc-text">参考示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试接口常用的curl"><span class="toc-text">测试接口常用的curl</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#参考示例-1"><span class="toc-text">参考示例</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+            </div>
+            <div>
+                <!-- 服务器运行时间统计 -->
+                <span id="sitetime"></span>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    Powered by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">litong</a>
+                </span> |
+                <span>
+                    Blog by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">彤哥哥</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#e67e22', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '  #FDF5E6', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: true || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash"></script>
+<!-- 页面点击小红心，在末尾添加，避免找不到 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- DaoVoice即时通讯工具 -->
+
+ <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "10b503a1"
+    });
+  daovoice('update');
+  </script>
+
+
+<!-- 音频播放 
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+-->
+
+<!-- 服务器运行时间统计 -->
+<script language="javascript">
+        function siteTime(){
+          window.setTimeout("siteTime()", 1000);
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth()+1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+          year - 作为date对象的年份，为4位年份值
+          month - 0-11之间的整数，做为date对象的月份
+          day - 1-31之间的整数，做为date对象的天数
+          hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+          minutes - 0-59之间的整数，做为date对象的分钟数
+          seconds - 0-59之间的整数，做为date对象的秒数
+          microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+          var t1 = Date.UTC(2016,12,1,00,00,00); //北京时间2016-12-1 00:00:00
+          var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+          var diff = t2-t1;
+          var diffYears = Math.floor(diff/years);
+          var diffDays = Math.floor((diff/days)-diffYears*365);
+          var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+          var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+          var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+          document.getElementById("sitetime").innerHTML=" 本站已运行 "+ diffYears+" 年 "+ diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分 "+diffSeconds+" 秒";
+        }
+        siteTime();
+</script>
+</body>

@@ -1,0 +1,431 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="彤哥哥的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <link rel="dns-prefetch" href="http://ltyeamin.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="Spring">
+
+
+    <meta name="description" content="在Spring中,被@Scope注解修饰Bean默认是单例模式的,即只有一个实例对象,多次获取Bean会拿到同一个对象.
+单例注册表Spring采用单例注册表的特殊方式实现单例模式.首先自己写个...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+
+<title>单例模式-Spring单例实现原理分析 | 彤哥哥的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="彤哥哥的博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+<script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+<link rel="stylesheet" href="/css/calendar.css?rev=@@hash">
+<link rel="stylesheet" href="/css/variable.css?rev=@@hash">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?ebfd000c0e7cc1ee84a00f01d419b1e2";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header" style="background-image:url(http://snippet.shenliyang.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="YeaMin">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                 <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://ltyeamin.github.io">彤哥哥的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa"></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/backend/"><i class="fa"></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/frontend/"><i class="fa"></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/ops/"><i class="fa"></i>运维</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/database/"><i class="fa"></i>数据库</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/algorithm/"><i class="fa"></i>算法</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/pm/"><i class="fa"></i>项目管理</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href=""><i class="fa"></i>自媒体</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/others/"><i class="fa"></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/about"><i class="fa /favicon.ico"></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="单例模式-Spring单例实现原理分析">
+            
+	            单例模式-Spring单例实现原理分析
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/backend/">backend</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Spring/">Spring</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2018/03/27</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+            <p class="fa fa-exclamation-triangle warning">
+                本文于<strong>438</strong>天之前发表，文中内容可能已经过时
+            </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>在Spring中,被@Scope注解修饰Bean默认是单例模式的,即只有一个实例对象,多次获取Bean会拿到同一个对象.</p>
+<h2 id="单例注册表"><a href="#单例注册表" class="headerlink" title="单例注册表"></a>单例注册表</h2><p>Spring采用单例注册表的特殊方式实现单例模式.首先自己写个单例注册表.我们可以通过Map缓存单例对象,实现单例注册表.值得注意的是,采用ConcurrentHashMap是出于线程安全的考虑.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author tong.li</span><br><span class="line"> * @Description: 一个简单的单例实现,设计单例注册表</span><br><span class="line"> * @packagename: com.yimi.yts.learningpath</span><br><span class="line"> * @date 2018-03-27 10:04</span><br><span class="line"> */</span><br><span class="line">public class SingletonReg &#123;</span><br><span class="line"></span><br><span class="line">    //构建采用ConcurrentHashMap,用于充当缓存注册表</span><br><span class="line">    private final static Map&lt;String, Object&gt; singletonObjects = new ConcurrentHashMap&lt;&gt;(16);</span><br><span class="line"></span><br><span class="line">    // 静态代码块只加载执行一次</span><br><span class="line">    static &#123;</span><br><span class="line">        // 实例化Bean</span><br><span class="line">        SingletonReg singletonReg = new SingletonReg();</span><br><span class="line">        //并注册到注册表中,key为类的完全限定名,value为实例化对象</span><br><span class="line">        singletonObjects.put(singletonReg.getClass().getName(),singletonReg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 私有化构造方法,避免外部创建本类实例</span><br><span class="line">     */</span><br><span class="line">    private SingletonReg() &#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     *  对外暴露获得该bean的方法,Spring框架一般会返回Object</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public static  SingletonReg getInstance(String className) &#123;</span><br><span class="line">        if (StringUtils.isEmpty(className)) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        //从注册表获取,如果没有直接创建</span><br><span class="line">        if (singletonObjects.get(className) == null) &#123;</span><br><span class="line">           try &#123;</span><br><span class="line">               //如果为空,通过反射进行实例化</span><br><span class="line">               singletonObjects.put(className, Class.forName(className).newInstance());</span><br><span class="line">           &#125; catch (Exception e) &#123;</span><br><span class="line">               e.printStackTrace();</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //从缓存表中回去,如果缓存命中直接返回</span><br><span class="line">        return (SingletonReg)singletonObjects.get(className);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同过以上单例实现,getInstance()方法通过传入类名进行判断,如果参数为null,那就无法获取bean,如果参数不为空,先从缓存注册表命中,如果命中就return掉,没有命中通过反射机制实例化一个return.<br>这样多次获得调用getInstance()方法都是获得同一个对象.测试如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> public static void main(String[] args) &#123;</span><br><span class="line">    /* </span><br><span class="line">     * 返回的都是同一个对象</span><br><span class="line">     * com.yimi.yts.learningpath.SingletonReg@3d82c5f3</span><br><span class="line">     * com.yimi.yts.learningpath.SingletonReg@3d82c5f3</span><br><span class="line">     */</span><br><span class="line">    System.out.println( SingletonReg.getInstance(&quot;com.yimi.yts.learningpath.SingletonReg&quot;));</span><br><span class="line">    System.out.println( SingletonReg.getInstance(&quot;com.yimi.yts.learningpath.SingletonReg&quot;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Spring源码分析"><a href="#Spring源码分析" class="headerlink" title="Spring源码分析"></a>Spring源码分析</h2><p>通过上述实现,Spring就是采用了这种单例注册表的特殊方式实现单例模式的.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory &#123;</span><br><span class="line"></span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">	protected &lt;T&gt; T doGetBean(</span><br><span class="line">			final String name, final Class&lt;T&gt; requiredType, final Object[] args, boolean typeCheckOnly)</span><br><span class="line">			throws BeansException &#123;</span><br><span class="line">		//对Bean的name进行处理,防止非法字符</span><br><span class="line">		final String beanName = transformedBeanName(name);</span><br><span class="line">		Object bean;</span><br><span class="line"></span><br><span class="line">		// Eagerly check singleton cache for manually registered singletons.</span><br><span class="line">		//从单例注册表中检查是否存在单例缓存</span><br><span class="line">		Object sharedInstance = getSingleton(beanName);</span><br><span class="line">		if (sharedInstance != null &amp;&amp; args == null) &#123;</span><br><span class="line">			//省略部分代码...</span><br><span class="line">			// 返回缓存实例</span><br><span class="line">			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		else &#123;</span><br><span class="line">		    //省略代码...</span><br><span class="line">			try &#123;</span><br><span class="line">				// ...忽略代码</span><br><span class="line">				//  单例模式,实例化bean,处理分支</span><br><span class="line">				// Create bean instance.</span><br><span class="line">				if (mbd.isSingleton()) &#123;</span><br><span class="line">					sharedInstance = getSingleton(beanName, new ObjectFactory&lt;Object&gt;() &#123;</span><br><span class="line">						@Override</span><br><span class="line">						public Object getObject() throws BeansException &#123;</span><br><span class="line">							try &#123;</span><br><span class="line">								return createBean(beanName, mbd, args);</span><br><span class="line">							&#125;</span><br><span class="line">							catch (BeansException ex) &#123;</span><br><span class="line">								destroySingleton(beanName);</span><br><span class="line">								throw ex;</span><br><span class="line">							&#125;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;);</span><br><span class="line">					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);</span><br><span class="line">				&#125;</span><br><span class="line">				//原型魔兽,处理分支</span><br><span class="line">				else if (mbd.isPrototype()) &#123;</span><br><span class="line">					//省略代码</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				else &#123;</span><br><span class="line">					String scopeName = mbd.getScope();</span><br><span class="line">					final Scope scope = this.scopes.get(scopeName);</span><br><span class="line">					if (scope == null) &#123;</span><br><span class="line">						throw new IllegalStateException(&quot;No Scope registered for scope name &apos;&quot; + scopeName + &quot;&apos;&quot;);</span><br><span class="line">					&#125;</span><br><span class="line">					try &#123;</span><br><span class="line">						Object scopedInstance = scope.get(beanName, new ObjectFactory&lt;Object&gt;() &#123;</span><br><span class="line">							@Override</span><br><span class="line">							public Object getObject() throws BeansException &#123;</span><br><span class="line">								beforePrototypeCreation(beanName);</span><br><span class="line">								try &#123;</span><br><span class="line">									return createBean(beanName, mbd, args);</span><br><span class="line">								&#125;</span><br><span class="line">								finally &#123;</span><br><span class="line">									afterPrototypeCreation(beanName);</span><br><span class="line">								&#125;</span><br><span class="line">							&#125;</span><br><span class="line">						&#125;);</span><br><span class="line">						bean = getObjectForBeanInstance(scopedInstance, name, beanName, mbd);</span><br><span class="line">					&#125;</span><br><span class="line">					catch (IllegalStateException ex) &#123;</span><br><span class="line">						throw new BeanCreationException(beanName,</span><br><span class="line">								&quot;Scope &apos;&quot; + scopeName + &quot;&apos; is not active for the current thread; consider &quot; +</span><br><span class="line">								&quot;defining a scoped proxy for this bean if you intend to refer to it from a singleton&quot;,</span><br><span class="line">								ex);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			catch (BeansException ex) &#123;</span><br><span class="line">				cleanupAfterBeanCreationFailure(beanName);</span><br><span class="line">				throw ex;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		// Check if required type matches the type of the actual bean instance.</span><br><span class="line">		if (requiredType != null &amp;&amp; bean != null &amp;&amp; !requiredType.isInstance(bean)) &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				return getTypeConverter().convertIfNecessary(bean, requiredType);</span><br><span class="line">			&#125;</span><br><span class="line">			catch (TypeMismatchException ex) &#123;</span><br><span class="line">				if (logger.isDebugEnabled()) &#123;</span><br><span class="line">					logger.debug(&quot;Failed to convert bean &apos;&quot; + name + &quot;&apos; to required type &apos;&quot; +</span><br><span class="line">							ClassUtils.getQualifiedName(requiredType) + &quot;&apos;&quot;, ex);</span><br><span class="line">				&#125;</span><br><span class="line">				throw new BeanNotOfRequiredTypeException(name, requiredType, bean.getClass());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return (T) bean;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中中重要的代码是getSingleton()方法,下面深入分析该方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry &#123;</span><br><span class="line"> </span><br><span class="line">    // 通过 Map 实现单例注册表</span><br><span class="line">    private final Map&lt;String, Object&gt; singletonObjects = new ConcurrentHashMap&lt;String, Object&gt;(64);</span><br><span class="line"> </span><br><span class="line">    public Object getSingleton(String beanName, ObjectFactory&lt;?&gt; singletonFactory) &#123;</span><br><span class="line">        Assert.notNull(beanName, &quot;&apos;beanName&apos; must not be null&quot;);</span><br><span class="line">        synchronized (this.singletonObjects) &#123;</span><br><span class="line">            // 检查缓存中是否存在实例  </span><br><span class="line">            Object singletonObject = this.singletonObjects.get(beanName);</span><br><span class="line">            if (singletonObject == null) &#123;</span><br><span class="line">                // ...忽略代码</span><br><span class="line">                try &#123;</span><br><span class="line">                    singletonObject = singletonFactory.getObject();</span><br><span class="line">                &#125;</span><br><span class="line">                catch (BeanCreationException ex) &#123;</span><br><span class="line">                    // ...忽略代码</span><br><span class="line">                &#125;</span><br><span class="line">                finally &#123;</span><br><span class="line">                    // ...忽略代码</span><br><span class="line">                &#125;</span><br><span class="line">                // 如果实例对象在不存在，我们注册到单例注册表中。</span><br><span class="line">                addSingleton(beanName, singletonObject);</span><br><span class="line">            &#125;</span><br><span class="line">            return (singletonObject != NULL_OBJECT ? singletonObject : null);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    protected void addSingleton(String beanName, Object singletonObject) &#123;</span><br><span class="line">        synchronized (this.singletonObjects) &#123;</span><br><span class="line">            this.singletonObjects.put(beanName, (singletonObject != null ? singletonObject : NULL_OBJECT));</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>综上述分析.我们可以得出:Spring对Bean实例的创建是采用单例注册表的方式进行实现的，而这个注册表的缓存是 ConcurrentHashMap对象。</p>
+    </div>
+    
+        <div class="reward" ontouchstart="">
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/about/alipay.png"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/about/weixin.png"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">请作者喝杯咖啡吧</p>
+
+    <!-- 社会分享工具 -->
+    <div class="bdsharebuttonbox">
+         <a href="#" class="bds_more" data-cmd="more"></a>
+         <a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+         <a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a>
+         <a href="#" class="bds_weixin" data-cmd="weixin"></a>
+    </div>
+     <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+     </script>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">彤哥哥</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2018/04/04/内网穿透神器-Ngrok/" class="pre-post btn btn-default" title="内网穿透神器-Ngrok">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">内网穿透神器-Ngrok</span>
+        </a>
+    
+    
+        <a href="/2018/03/15/线程切换导致ThreadLocal数据丢失分析/" class="next-post btn btn-default" title="线程切换导致ThreadLocal数据丢失分析">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">线程切换导致ThreadLocal数据丢失分析</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'wA3iNQOiAuhrRJkNgIjirA8f-gzGzoHsz',
+            appKey: 'iGL0JyEnJQ8HIMlLd4Sm0oOp',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail,link'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+    </div>
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#单例注册表"><span class="toc-text">单例注册表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring源码分析"><span class="toc-text">Spring源码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+            </div>
+            <div>
+                <!-- 服务器运行时间统计 -->
+                <span id="sitetime"></span>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    Powered by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">litong</a>
+                </span> |
+                <span>
+                    Blog by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">彤哥哥</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#e67e22', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '  #FDF5E6', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: true || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash"></script>
+<!-- 页面点击小红心，在末尾添加，避免找不到 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- DaoVoice即时通讯工具 -->
+
+ <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "10b503a1"
+    });
+  daovoice('update');
+  </script>
+
+
+<!-- 音频播放 
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+-->
+
+<!-- 服务器运行时间统计 -->
+<script language="javascript">
+        function siteTime(){
+          window.setTimeout("siteTime()", 1000);
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth()+1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+          year - 作为date对象的年份，为4位年份值
+          month - 0-11之间的整数，做为date对象的月份
+          day - 1-31之间的整数，做为date对象的天数
+          hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+          minutes - 0-59之间的整数，做为date对象的分钟数
+          seconds - 0-59之间的整数，做为date对象的秒数
+          microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+          var t1 = Date.UTC(2016,12,1,00,00,00); //北京时间2016-12-1 00:00:00
+          var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+          var diff = t2-t1;
+          var diffYears = Math.floor(diff/years);
+          var diffDays = Math.floor((diff/days)-diffYears*365);
+          var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+          var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+          var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+          document.getElementById("sitetime").innerHTML=" 本站已运行 "+ diffYears+" 年 "+ diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分 "+diffSeconds+" 秒";
+        }
+        siteTime();
+</script>
+</body>

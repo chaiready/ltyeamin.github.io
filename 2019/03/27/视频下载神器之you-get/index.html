@@ -1,0 +1,991 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="彤哥哥的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <link rel="dns-prefetch" href="http://ltyeamin.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="实用工具及技巧">
+
+
+    <meta name="description" content="  我们日常上网过程中，需要将网页中的视频资源提取下载出来，一般如果网站没有屏蔽视频地址且用的是非Flash播放器(现流行HTML5播放器),我们可以在视频播放器右键直接下载视频资源，但是国内网...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+
+<title>视频下载神器之you-get | 彤哥哥的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="彤哥哥的博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+<script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+<link rel="stylesheet" href="/css/calendar.css?rev=@@hash">
+<link rel="stylesheet" href="/css/variable.css?rev=@@hash">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?ebfd000c0e7cc1ee84a00f01d419b1e2";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header" style="background-image:url(http://snippet.shenliyang.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="YeaMin">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                 <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://ltyeamin.github.io">彤哥哥的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa"></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/backend/"><i class="fa"></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/frontend/"><i class="fa"></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/ops/"><i class="fa"></i>运维</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/database/"><i class="fa"></i>数据库</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/algorithm/"><i class="fa"></i>算法</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/pm/"><i class="fa"></i>项目管理</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href=""><i class="fa"></i>自媒体</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/others/"><i class="fa"></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/about"><i class="fa /favicon.ico"></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="视频下载神器之you-get">
+            
+	            视频下载神器之you-get
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/ops/">ops</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/实用工具及技巧/">实用工具及技巧</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/03/27</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>  我们日常上网过程中，需要将网页中的视频资源提取下载出来，一般如果网站没有屏蔽视频地址且用的是非Flash播放器(现流行HTML5播放器),我们可以在视频播放器右键直接下载视频资源，但是国内网站运营商为了保护版权，会将真正的资源地址屏蔽起来，我们无法找到真实地址并进行下载。因此出现了好多第三方的应用来帮助我们提取网页中的视频，常见的提取软件有Chrome插件Video download helper和Video Downloader GetThemAll、国内以前很著名的硕鼠和维棠视频下载(这两个LZ之前经常用，硕鼠经常用于下载51CTO的教学视频，维棠经常用于电视剧批量下载)。</p>
+<p>今天我给大家带来一款视频下载神器you-get，<a href="https://you-get.org/" target="_blank" rel="noopener">you-get</a> 乃一小小哒命令行程序，提供便利的方式来下载网络上的媒体信息。好了，话不多说，接下来让我们开始体验一下吧。</p>
+<h2 id="为什么你要好好的用"><a href="#为什么你要好好的用" class="headerlink" title="为什么你要好好的用"></a>为什么你要好好的用</h2><ul>
+<li>你欢喜于互联网上的富媒体内容，并为个人寻欢而储存</li>
+<li>你喜悦观看的视频，然而不得保存；对个人设备无从控制，此乃违背开放互联网之行为</li>
+<li>你寻求解脱于闭源软件或JavaScript代码，并禁止Flash运行</li>
+<li>你为黑客精神与自由软件而欣喜</li>
+</ul>
+<h2 id="功能特性"><a href="#功能特性" class="headerlink" title="功能特性"></a>功能特性</h2><ul>
+<li>下载流行网站之音视频，例如YouTube, Youku, Niconico,以及更多. (查看<a href="https://github.com/soimort/you-get/wiki/%E4%B8%AD%E6%96%87%E8%AF%B4%E6%98%8E#supported-sites" target="_blank" rel="noopener">完整支持列表</a>)</li>
+<li>于您心仪的媒体播放器中观看在线视频，脱离浏览器与广告</li>
+<li>下载您喜欢的网页上的图片</li>
+<li>下载任何非HTML内容，例如二进制文件</li>
+</ul>
+<h2 id="安装方式"><a href="#安装方式" class="headerlink" title="安装方式"></a>安装方式</h2><h3 id="Mac安装"><a href="#Mac安装" class="headerlink" title="Mac安装"></a>Mac安装</h3><ol>
+<li><p>在Mac上安装<a href="https://brew.sh/" target="_blank" rel="noopener">Homebrew</a>，Homebrew是一款Mac OS平台下的软件包管理工具，拥有安装、卸载、更新、查看、搜索等很多实用的功能，功能类似于Linux平台上的apt-get或yum操作。进入Mac终端输入一下命令即可安装Homebrew;</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/ruby -e <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)</span>"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装完成Homebrew后，我们来安装you-get工具，输入一下命令即可安装完成;</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Yeamin:Hexo mac$ brew install you-get</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装完成后，我们检查版本来确认是否安装成功。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Yeamin:Hexo mac$ you-get -V</span><br><span class="line">you-get: version 0.4.1205, a tiny downloader that scrapes the web.</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Linux安装"><a href="#Linux安装" class="headerlink" title="Linux安装"></a>Linux安装</h3><ol>
+<li><p>安装Python3；</p>
+</li>
+<li><p>使用pip来安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install you-get</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="Windows安装"><a href="#Windows安装" class="headerlink" title="Windows安装"></a>Windows安装</h3><ol>
+<li>下载<a href="https://github.com/soimort/you-get/releases/latest" target="_blank" rel="noopener">Windows预装包</a>即可；</li>
+<li>安装并执行可运行程序。</li>
+</ol>
+<h3 id="Git安装"><a href="#Git安装" class="headerlink" title="Git安装"></a>Git安装</h3><p>即使您不常使用Python，作为开发者，也请使用此方法。</p>
+<ol>
+<li><p>下载安装资源，如下命令;</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> git://github.com/soimort/you-get.git</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将目录加入 <code>PATH</code>, 或运行 <code>make install</code> 以安装<code>you-get</code>于永久路径。</p>
+</li>
+</ol>
+<h2 id="使用体验"><a href="#使用体验" class="headerlink" title="使用体验"></a>使用体验</h2><p>以最近热播的电视剧《都挺好》为例，操作如下：</p>
+<h3 id="查询视频信息"><a href="#查询视频信息" class="headerlink" title="查询视频信息"></a>查询视频信息</h3><p>可以使用 <code>--info</code>/<code>-i</code> 以查看所有可用画质与格式</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get -i <span class="string">'https://v.youku.com/v_show/id_XNDA3OTMzMTE4MA==.html?spm=a2h1n.8261147.reload_1.1~3~A&amp;s=4e4e42efbfbdefbfbd62'</span></span><br></pre></td></tr></table></figure>
+<p>执行上述命令后，观察执行结果我们可以观察出电视剧《都挺好》第1集的片源来自优酷，画质有超清、高清、渣清、标清，视频格式都为mp4，视频文件大小以及相关地址链接。</p>
+<p><img src="http://ps7wdwp0v.bkt.clouddn.com/imgs/doc/20190327001/info.png" alt="视频信息查询"></p>
+<h3 id="下载视频"><a href="#下载视频" class="headerlink" title="下载视频"></a>下载视频</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get <span class="string">'https://v.youku.com/v_show/id_XNDA3OTMzMTE4MA==.html?spm=a2h1n.8261147.reload_1.1~3~A&amp;s=4e4e42efbfbdefbfbd62'</span></span><br></pre></td></tr></table></figure>
+<p>输入上述命令后，即可开始下载，默认画质为超清画质，视频会分段下载，下载完成之后，you-get自动调用ffmpeg将多段视频进行合并操作。</p>
+<p><img src="http://ps7wdwp0v.bkt.clouddn.com/imgs/doc/20190327001/downing.png" alt="开始下载"></p>
+<h3 id="加载Cookies"><a href="#加载Cookies" class="headerlink" title="加载Cookies"></a>加载Cookies</h3><p>在这个下载的过程中，我们发现一个问题，比如下载下来的视频大小与显示的大小不符合，我们下下来只有80M左右，视频时间为10分钟左右。</p>
+<p>为什么会这样呢？LZ查好好阅读了一下WIKI，原因是网站视频只公开一部分视频片段，并非所有视频可供任何人观看。如果需要登录以观看 (例如, 私密视频), 可能必须将浏览器cookie通过<code>--cookies</code>/<code>-c</code> 加载入 <code>you-get</code>。需要我们登录的Cookies信息，我们登录后将打开F12查看Cookie信息，一查看，一大堆Cookie，怎么整，于是LZ又找到一个<a href="http://ps7wdwp0v.bkt.clouddn.com/tools/20190327001/www.cnplugins.com_njabckikapfpffapmjgojcnbfjonfjfg_1_8_5_0_.crx" target="_blank" rel="noopener">Chrome浏览器的插件</a>，自动生成Cookies，如图，可以将红色区域拷贝到Cookies.txt中，然后继续执行下载操作。</p>
+<p><img src="http://ps7wdwp0v.bkt.clouddn.com/imgs/doc/20190327001/Cookie.png" alt="Cookies信息获取"></p>
+<p>注意:</p>
+<ul>
+<li>目前我们支持两种cookie格式：Mozilla <code>cookies.sqlite</code> 和 Netscape <code>cookies.txt</code>.</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">you-get -c Cookies.txt https://v.youku.com/v_show/id_XNDA3OTMzMTE4MA==.html</span><br></pre></td></tr></table></figure>
+<p><img src="http://ps7wdwp0v.bkt.clouddn.com/imgs/doc/20190327001/download.png" alt="Cookies下载"></p>
+<h3 id="本地播放器播放"><a href="#本地播放器播放" class="headerlink" title="本地播放器播放"></a>本地播放器播放</h3><p>如果你只是在用自己本地播放器进行观看的话使用而不是下载的话，则可以 <code>--player</code>/<code>-p</code> 将视频喂进播放器, 例如 <code>mplayer</code>或者 <code>vlc</code>。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ you-get -p vlc <span class="string">'https://www.youtube.com/watch?v=jNQXAC9IVRw'</span></span><br></pre></td></tr></table></figure>
+<p>或者你想在浏览器中观看而不希望看广告或评论区:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ you-get -p chromium <span class="string">'https://www.youtube.com/watch?v=jNQXAC9IVRw'</span></span><br></pre></td></tr></table></figure>
+<h2 id="支持主流网站列表"><a href="#支持主流网站列表" class="headerlink" title="支持主流网站列表"></a>支持主流网站列表</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>网站</td>
+<td>URL</td>
+<td>视频?</td>
+<td>图像?</td>
+<td>音频?</td>
+</tr>
+<tr>
+<td><strong>YouTube</strong></td>
+<td><a href="https://www.youtube.com/" target="_blank" rel="noopener">https://www.youtube.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Twitter</strong></td>
+<td><a href="https://twitter.com/" target="_blank" rel="noopener">https://twitter.com/</a></td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>VK</td>
+<td><a href="http://vk.com/" target="_blank" rel="noopener">http://vk.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Vine</td>
+<td><a href="https://vine.co/" target="_blank" rel="noopener">https://vine.co/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Vimeo</td>
+<td><a href="https://vimeo.com/" target="_blank" rel="noopener">https://vimeo.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Vidto</td>
+<td><a href="http://vidto.me/" target="_blank" rel="noopener">http://vidto.me/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Veoh</td>
+<td><a href="http://www.veoh.com/" target="_blank" rel="noopener">http://www.veoh.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Tumblr</strong></td>
+<td><a href="https://www.tumblr.com/" target="_blank" rel="noopener">https://www.tumblr.com/</a></td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>TED</td>
+<td><a href="http://www.ted.com/" target="_blank" rel="noopener">http://www.ted.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SoundCloud</td>
+<td><a href="https://soundcloud.com/" target="_blank" rel="noopener">https://soundcloud.com/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Pinterest</td>
+<td><a href="https://www.pinterest.com/" target="_blank" rel="noopener">https://www.pinterest.com/</a></td>
+<td></td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>MusicPlayOn</td>
+<td><a href="http://en.musicplayon.com/" target="_blank" rel="noopener">http://en.musicplayon.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>MTV81</td>
+<td><a href="http://www.mtv81.com/" target="_blank" rel="noopener">http://www.mtv81.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Mixcloud</td>
+<td><a href="https://www.mixcloud.com/" target="_blank" rel="noopener">https://www.mixcloud.com/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Metacafe</td>
+<td><a href="http://www.metacafe.com/" target="_blank" rel="noopener">http://www.metacafe.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Magisto</td>
+<td><a href="http://www.magisto.com/" target="_blank" rel="noopener">http://www.magisto.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Khan Academy</td>
+<td><a href="https://www.khanacademy.org/" target="_blank" rel="noopener">https://www.khanacademy.org/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>JPopsuki TV</td>
+<td><a href="http://www.jpopsuki.tv/" target="_blank" rel="noopener">http://www.jpopsuki.tv/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Internet Archive</td>
+<td><a href="https://archive.org/" target="_blank" rel="noopener">https://archive.org/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Instagram</strong></td>
+<td><a href="https://instagram.com/" target="_blank" rel="noopener">https://instagram.com/</a></td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>Heavy Music Archive</td>
+<td><a href="http://www.heavy-music.ru/" target="_blank" rel="noopener">http://www.heavy-music.ru/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>Google+</strong></td>
+<td><a href="https://plus.google.com/" target="_blank" rel="noopener">https://plus.google.com/</a></td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>Freesound</td>
+<td><a href="http://www.freesound.org/" target="_blank" rel="noopener">http://www.freesound.org/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Flickr</td>
+<td><a href="https://www.flickr.com/" target="_blank" rel="noopener">https://www.flickr.com/</a></td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>Facebook</td>
+<td><a href="https://www.facebook.com/" target="_blank" rel="noopener">https://www.facebook.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>eHow</td>
+<td><a href="http://www.ehow.com/" target="_blank" rel="noopener">http://www.ehow.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Dailymotion</td>
+<td><a href="http://www.dailymotion.com/" target="_blank" rel="noopener">http://www.dailymotion.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CBS</td>
+<td><a href="http://www.cbs.com/" target="_blank" rel="noopener">http://www.cbs.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Bandcamp</td>
+<td><a href="http://bandcamp.com/" target="_blank" rel="noopener">http://bandcamp.com/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>AliveThai</td>
+<td><a href="http://alive.in.th/" target="_blank" rel="noopener">http://alive.in.th/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>interest.me</td>
+<td><a href="http://ch.interest.me/tvn" target="_blank" rel="noopener">http://ch.interest.me/tvn</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>755ナナゴーゴー</strong></td>
+<td><a href="http://7gogo.jp/" target="_blank" rel="noopener">http://7gogo.jp/</a></td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>niconicoニコニコ動画</strong></td>
+<td><a href="http://www.nicovideo.jp/" target="_blank" rel="noopener">http://www.nicovideo.jp/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>163网易视频网易云音乐</strong></td>
+<td><a href="http://v.163.com/" target="_blank" rel="noopener">http://v.163.com/</a> <a href="http://music.163.com/" target="_blank" rel="noopener">http://music.163.com/</a></td>
+<td>✓</td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>56网</td>
+<td><a href="http://www.56.com/" target="_blank" rel="noopener">http://www.56.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>AcFun</strong></td>
+<td><a href="http://www.acfun.tv/" target="_blank" rel="noopener">http://www.acfun.tv/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Baidu百度贴吧</strong></td>
+<td><a href="http://tieba.baidu.com/" target="_blank" rel="noopener">http://tieba.baidu.com/</a></td>
+<td>✓</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>爆米花网</td>
+<td><a href="http://www.baomihua.com/" target="_blank" rel="noopener">http://www.baomihua.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>bilibili哔哩哔哩</strong></td>
+<td><a href="http://www.bilibili.com/" target="_blank" rel="noopener">http://www.bilibili.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Dilidili</td>
+<td><a href="http://www.dilidili.com/" target="_blank" rel="noopener">http://www.dilidili.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>豆瓣</td>
+<td><a href="http://www.douban.com/" target="_blank" rel="noopener">http://www.douban.com/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>斗鱼</td>
+<td><a href="http://www.douyutv.com/" target="_blank" rel="noopener">http://www.douyutv.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>凤凰视频</td>
+<td><a href="http://v.ifeng.com/" target="_blank" rel="noopener">http://v.ifeng.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>风行网</td>
+<td><a href="http://www.fun.tv/" target="_blank" rel="noopener">http://www.fun.tv/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>iQIYI 爱奇艺</td>
+<td><a href="http://www.iqiyi.com/" target="_blank" rel="noopener">http://www.iqiyi.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>激动网</td>
+<td><a href="http://www.joy.cn/" target="_blank" rel="noopener">http://www.joy.cn/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>酷6网</td>
+<td><a href="http://www.ku6.com/" target="_blank" rel="noopener">http://www.ku6.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>酷狗音乐</td>
+<td><a href="http://www.kugou.com/" target="_blank" rel="noopener">http://www.kugou.com/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>酷我音乐</td>
+<td><a href="http://www.kuwo.cn/" target="_blank" rel="noopener">http://www.kuwo.cn/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>乐视网</td>
+<td><a href="http://www.letv.com/" target="_blank" rel="noopener">http://www.letv.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>荔枝FM</td>
+<td><a href="http://www.lizhi.fm/" target="_blank" rel="noopener">http://www.lizhi.fm/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>秒拍</td>
+<td><a href="http://www.miaopai.com/" target="_blank" rel="noopener">http://www.miaopai.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>MioMio弹幕网</td>
+<td><a href="http://www.miomio.tv/" target="_blank" rel="noopener">http://www.miomio.tv/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>痞客邦</td>
+<td><a href="https://www.pixnet.net/" target="_blank" rel="noopener">https://www.pixnet.net/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>PPTV聚力</td>
+<td><a href="http://www.pptv.com/" target="_blank" rel="noopener">http://www.pptv.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>齐鲁网</td>
+<td><a href="http://v.iqilu.com/" target="_blank" rel="noopener">http://v.iqilu.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>QQ 腾讯视频</td>
+<td><a href="http://v.qq.com/" target="_blank" rel="noopener">http://v.qq.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>阡陌视频</td>
+<td><a href="http://qianmo.com/" target="_blank" rel="noopener">http://qianmo.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Sina 新浪视频 微博秒拍视频</td>
+<td><a href="http://video.sina.com.cn/" target="_blank" rel="noopener">http://video.sina.com.cn/</a> <a href="http://video.weibo.com/" target="_blank" rel="noopener">http://video.weibo.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Sohu 搜狐视频</td>
+<td><a href="http://tv.sohu.com/" target="_blank" rel="noopener">http://tv.sohu.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>天天动听</td>
+<td><a href="http://www.dongting.com/" target="_blank" rel="noopener">http://www.dongting.com/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td><strong>Tudou土豆</strong></td>
+<td><a href="http://www.tudou.com/" target="_blank" rel="noopener">http://www.tudou.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>虾米</td>
+<td><a href="http://www.xiami.com/" target="_blank" rel="noopener">http://www.xiami.com/</a></td>
+<td></td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>阳光卫视</td>
+<td><a href="http://www.isuntv.com/" target="_blank" rel="noopener">http://www.isuntv.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>音悦Tai</strong></td>
+<td><a href="http://www.yinyuetai.com/" target="_blank" rel="noopener">http://www.yinyuetai.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Youku优酷</strong></td>
+<td><a href="http://www.youku.com/" target="_blank" rel="noopener">http://www.youku.com/</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>战旗TV</td>
+<td><a href="http://www.zhanqi.tv/lives" target="_blank" rel="noopener">http://www.zhanqi.tv/lives</a></td>
+<td>✓</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>央视网</td>
+<td><a href="http://www.cntv.cn/" target="_blank" rel="noopener">http://www.cntv.cn/</a></td>
+<td>✓</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="其他类似工具"><a href="#其他类似工具" class="headerlink" title="其他类似工具"></a>其他类似工具</h2><ul>
+<li>youtube-dl：<a href="https://github.com/rg3/youtube-dl" target="_blank" rel="noopener">youtube-dl</a>功能和you-get类似。</li>
+<li>Video Download Manager：可视化工具，相当于youtube-dl+you-get。</li>
+<li>ykdl：专注于优酷视频。</li>
+<li>annie：专注于在线视频下载的轻量级命令行工具</li>
+<li>维棠:<a href="http://www.vidown.cn/" target="_blank" rel="noopener">维棠</a>最专业flv视频下载软件</li>
+<li>硕鼠：<a href="http://www.flvcd.com/" target="_blank" rel="noopener">硕鼠</a>最稳定的FLV视频下载平台</li>
+</ul>
+<h2 id="无水印预览"><a href="#无水印预览" class="headerlink" title="无水印预览"></a>无水印预览</h2><p><img src="http://ps7wdwp0v.bkt.clouddn.com/imgs/doc/20190327001/preview01.png" alt="预览1"></p>
+<p><img src="http://ps7wdwp0v.bkt.clouddn.com/imgs/doc/20190327001/preview02.png" alt="预览2"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://github.com/soimort/you-get/wiki/%E4%B8%AD%E6%96%87%E8%AF%B4%E6%98%8E#supported-sites" target="_blank" rel="noopener">you-get中文文档</a></p>
+<p><a href="https://github.com/soimort" target="_blank" rel="noopener">you-get源码</a></p>
+    </div>
+    
+        <div class="reward" ontouchstart="">
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/about/alipay.png"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/about/weixin.png"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">请作者喝杯咖啡吧</p>
+
+    <!-- 社会分享工具 -->
+    <div class="bdsharebuttonbox">
+         <a href="#" class="bds_more" data-cmd="more"></a>
+         <a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+         <a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a>
+         <a href="#" class="bds_weixin" data-cmd="weixin"></a>
+    </div>
+     <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+     </script>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">彤哥哥</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/03/28/谈谈国内大环境下的996加班文化/" class="pre-post btn btn-default" title="谈谈国内大环境下的996加班文化">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">谈谈国内大环境下的996加班文化</span>
+        </a>
+    
+    
+        <a href="/2019/01/05/GC调优基础之堆大小/" class="next-post btn btn-default" title="GC调优基础之堆大小">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">GC调优基础之堆大小</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'wA3iNQOiAuhrRJkNgIjirA8f-gzGzoHsz',
+            appKey: 'iGL0JyEnJQ8HIMlLd4Sm0oOp',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail,link'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+    </div>
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么你要好好的用"><span class="toc-text">为什么你要好好的用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#功能特性"><span class="toc-text">功能特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装方式"><span class="toc-text">安装方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Mac安装"><span class="toc-text">Mac安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux安装"><span class="toc-text">Linux安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows安装"><span class="toc-text">Windows安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Git安装"><span class="toc-text">Git安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用体验"><span class="toc-text">使用体验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查询视频信息"><span class="toc-text">查询视频信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#下载视频"><span class="toc-text">下载视频</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加载Cookies"><span class="toc-text">加载Cookies</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地播放器播放"><span class="toc-text">本地播放器播放</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#支持主流网站列表"><span class="toc-text">支持主流网站列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他类似工具"><span class="toc-text">其他类似工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#无水印预览"><span class="toc-text">无水印预览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+            </div>
+            <div>
+                <!-- 服务器运行时间统计 -->
+                <span id="sitetime"></span>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    Powered by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">litong</a>
+                </span> |
+                <span>
+                    Blog by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">彤哥哥</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#e67e22', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '  #FDF5E6', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: true || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash"></script>
+<!-- 页面点击小红心，在末尾添加，避免找不到 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- DaoVoice即时通讯工具 -->
+
+ <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "10b503a1"
+    });
+  daovoice('update');
+  </script>
+
+
+<!-- 音频播放 
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+-->
+
+<!-- 服务器运行时间统计 -->
+<script language="javascript">
+        function siteTime(){
+          window.setTimeout("siteTime()", 1000);
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth()+1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+          year - 作为date对象的年份，为4位年份值
+          month - 0-11之间的整数，做为date对象的月份
+          day - 1-31之间的整数，做为date对象的天数
+          hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+          minutes - 0-59之间的整数，做为date对象的分钟数
+          seconds - 0-59之间的整数，做为date对象的秒数
+          microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+          var t1 = Date.UTC(2016,12,1,00,00,00); //北京时间2016-12-1 00:00:00
+          var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+          var diff = t2-t1;
+          var diffYears = Math.floor(diff/years);
+          var diffDays = Math.floor((diff/days)-diffYears*365);
+          var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+          var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+          var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+          document.getElementById("sitetime").innerHTML=" 本站已运行 "+ diffYears+" 年 "+ diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分 "+diffSeconds+" 秒";
+        }
+        siteTime();
+</script>
+</body>

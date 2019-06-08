@@ -1,0 +1,496 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="彤哥哥的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <link rel="dns-prefetch" href="http://ltyeamin.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="Linux">
+
+
+    <meta name="description" content="Linux的世界里一切皆文件,对Linux的操作就是对文件的处理.被业界称为”三剑客”的awk,sed,grep就能够帮助我们更方便更高效的处理文件.“三剑客”中grep擅长查找功能,sed擅长...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+
+<title>Linux基础-正则表达式之三剑客 | 彤哥哥的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="彤哥哥的博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+<script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+<link rel="stylesheet" href="/css/calendar.css?rev=@@hash">
+<link rel="stylesheet" href="/css/variable.css?rev=@@hash">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?ebfd000c0e7cc1ee84a00f01d419b1e2";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header" style="background-image:url(http://snippet.shenliyang.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="YeaMin">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                 <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://ltyeamin.github.io">彤哥哥的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa"></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/backend/"><i class="fa"></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/frontend/"><i class="fa"></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/ops/"><i class="fa"></i>运维</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/database/"><i class="fa"></i>数据库</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/algorithm/"><i class="fa"></i>算法</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/pm/"><i class="fa"></i>项目管理</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href=""><i class="fa"></i>自媒体</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/others/"><i class="fa"></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/about"><i class="fa /favicon.ico"></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Linux基础-正则表达式之三剑客">
+            
+	            Linux基础-正则表达式之三剑客
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/ops/">ops</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Linux/">Linux</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2018/05/22</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+            <p class="fa fa-exclamation-triangle warning">
+                本文于<strong>381</strong>天之前发表，文中内容可能已经过时
+            </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>Linux的世界里一切皆文件,对Linux的操作就是对文件的处理.被业界称为”三剑客”的awk,sed,grep就能够帮助我们更方便更高效的处理文件.<br>“三剑客”中grep擅长查找功能,sed擅长取行和替换,awk擅长取列.<br>“三剑客”就是普通的Linux命令,而正则表达式好比一个模板,两者结合使用,能够发挥巨大的作用,尤其是在Shell脚本中,使我们的代码短小精悍.总之就是一句话:提高工作效率. </p>
+<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p>字符串:”abcaxc”,正则表达式为:ab.*c</p>
+<ul>
+<li>贪婪模式: 编程中默认模式,正则表达式一般趋向于最大长度[匹配.如正则ab.*c最大匹配为:abcaxc</li>
+<li>非贪婪模式: 正则匹配到结果就好,说白了就是最少匹配.如正则ab.*c最大匹配为:abc  <h2 id="grep命令"><a href="#grep命令" class="headerlink" title="grep命令"></a>grep命令</h2>grep命令是一种强大的文本搜索工具,它能使用特定模式匹配(包括正则表达式)搜索文本,并默认输出匹配行.<br>unix的grep家族包括grep,egrep和fgrep,笔者在这不一一列举了,读者可自行研究.<h3 id="常用选项"><a href="#常用选项" class="headerlink" title="常用选项"></a>常用选项</h3>　　-c : 计算找到’搜寻字符串’的次数<br>　　-i : 忽略大小写进行搜索<br>　　-n : 顺便输出行号<br>　　-v : 反向选择,取反搜索<br>　　-color=auto : 可以找到的搜索关键字加上颜色显示</li>
+</ul>
+<h3 id="实战示例"><a href="#实战示例" class="headerlink" title="实战示例"></a>实战示例</h3><p>1.通过管道查找配置文件里的字符<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# cat server.conf | grep port</span><br><span class="line">port : 9001</span><br></pre></td></tr></table></figure></p>
+<p>2.通过管道查找以*.conf结尾的文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# ll | grep *.conf</span><br><span class="line">-rw-r--r-- 1 root root    22 May 18 14:51 server.conf</span><br></pre></td></tr></table></figure></p>
+<p>3.根据关键字查找进程信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# ps -ef | grep pptpd</span><br><span class="line">root     29510     1  0 14:55 ?        00:00:00 /usr/sbin/pptpd -f</span><br><span class="line">root     30061 25475  0 14:58 pts/2    00:00:00 grep --color=auto pptpd</span><br></pre></td></tr></table></figure></p>
+<h2 id="sed命令"><a href="#sed命令" class="headerlink" title="sed命令"></a>sed命令</h2><p>sed是一项Linux指令,功能同awk类似,差别在于,sed简单,擅长取行和替换,对列处理的功能要差一些,awk的功能复杂,对列处理的功能比较强大.  </p>
+<h3 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h3><ul>
+<li>sed [options] ‘command’ file(s)</li>
+<li>sed [options] -f scriptfile file(s)<h3 id="取行选项"><a href="#取行选项" class="headerlink" title="取行选项"></a>取行选项</h3></li>
+<li>a\ 在当前行下面插入文本.     </li>
+<li>i\ 在当前行上面插入文本.    </li>
+<li>c\ 把选定的行改为新的文本.    </li>
+<li>d 删除,删除选择的行.    </li>
+<li>D 删除模板块的第一行.    </li>
+<li>s 替换指定字符</li>
+<li>h 拷贝模板块的内容到内存中的缓冲区.    </li>
+<li>H 追加模板块的内容到内存中的缓冲区.    </li>
+<li>g 获得内存缓冲区的内容,并替代当前模板块中的文本.    </li>
+<li>G 获得内存缓冲区的内容,并追加到当前模板块文本的后面.    </li>
+<li>l 列表不能打印字符的清单.    </li>
+<li>n 读取下一个输入行,用下一个命令处理新的行而不是用第一个命令.    </li>
+<li>N 追加下一个输入行到模板块后面并在二者间嵌入一个新行,改变当前行号码.    </li>
+<li>p 打印模板块的行.    </li>
+<li>P(大写) 打印模板块的第一行.    </li>
+<li>q 退出Sed.    </li>
+<li>b lable 分支到脚本中带有标记的地方,如果分支不存在则分支到脚本的末尾.    </li>
+<li>r file 从file中读行.    </li>
+<li>t label if分支,从最后一行开始,条件一旦满足或者T,t命令,将导致分支到带有标号的命令处,或者到脚本的末尾.    </li>
+<li>T label 错误分支,从最后一行开始,一旦发生错误或者T,t命令,将导致分支到带有标号的命令处,或者到脚本的末尾.    </li>
+<li>w file 写并追加模板块到file末尾.      </li>
+<li>W file 写并追加模板块的第一行到file末尾.      </li>
+<li>! 表示后面的命令对所有没有被选定的行发生作用.      </li>
+<li>= 打印当前行号码.      </li>
+<li># 把注释扩展到下一个换行符以前.      <h3 id="替换选项"><a href="#替换选项" class="headerlink" title="替换选项"></a>替换选项</h3></li>
+<li>g 表示行内全面替换.  </li>
+<li>p 表示打印行.  </li>
+<li>w 表示把行写入一个文件.  </li>
+<li>x 表示互换模板块中的文本和缓冲区中的文本.  </li>
+<li>y 表示把一个字符翻译为另外的字符（但是不用于正则表达式）</li>
+<li>\1 子串匹配标记</li>
+<li>&amp; 已匹配字符串标记<h3 id="实战示例-1"><a href="#实战示例-1" class="headerlink" title="实战示例"></a>实战示例</h3></li>
+</ul>
+<ol>
+<li>获取文件的行内容<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# sed -n 2p /etc/passwd  # 获取/ect/passwd第二行</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">[root@litong ~]# sed -n 2,7p /etc/passwd  # 获取/ect/passwd第二行到第七行</span><br><span class="line">bin:x:1:1:bin:/bin:/sbin/nologin</span><br><span class="line">daemon:x:2:2:daemon:/sbin:/sbin/nologin</span><br><span class="line">adm:x:3:4:adm:/var/adm:/sbin/nologin</span><br><span class="line">lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin</span><br><span class="line">sync:x:5:0:sync:/sbin:/bin/sync</span><br><span class="line">shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>2.替换文本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# sed -i &apos;s/port/pp/g&apos; server.conf  # 文件中含有port为全局替换pp,,并不会真正进行文件替换,而只是把操作后的文本返回</span><br><span class="line">[root@litong ~]# cat server.conf </span><br><span class="line">server</span><br><span class="line">server</span><br><span class="line">   pp : 9001</span><br><span class="line">   pp : 9001</span><br></pre></td></tr></table></figure></p>
+<p>3.删除文本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# sed &apos;2d&apos; server.conf  # 删除文件的第二行,并不会真正删除文件行,而只是把操作后的文本返回</span><br><span class="line">server</span><br><span class="line">   pp : 9001</span><br><span class="line">   pp : 9001</span><br><span class="line">[root@litong ~]# sed &apos;1,$d&apos; server.conf #文件清空,,并不会真正删除文件行,而只是把操作后的文本返回</span><br></pre></td></tr></table></figure></p>
+<h2 id="awk命令"><a href="#awk命令" class="headerlink" title="awk命令"></a>awk命令</h2><p>awk是一个优良的文本处理工具,Linux及Unix环境中现有的功能最强大的数据处理引擎之一.这个命令擅长取列.<br>awk经过改进生成新的版本nawk和gawk,现在默认linux系统下日常使用gawk.   </p>
+<h3 id="命令格式-1"><a href="#命令格式-1" class="headerlink" title="命令格式"></a>命令格式</h3><ul>
+<li>awk [选项参数] ‘script’ var=value file(s)</li>
+<li>awk [选项参数] -f scriptfile var=value file(s)  <h3 id="选项参数"><a href="#选项参数" class="headerlink" title="选项参数"></a>选项参数</h3></li>
+<li>-F fs or –field-separator fs :指定输入文件折分隔符,fs是一个字符串或者是一个正则表达式,如-F:.</li>
+<li>-v var=value or –asign var=value<br>赋值一个用户定义变量.</li>
+<li>-f scripfile or –file scriptfile,从脚本文件中读取awk命令.</li>
+<li>-mf nnn and -mr nnn,对nnn值设置内在限制,-mf选项限制分配给nnn的最大块数目;-mr选项限制记录的最大数目.这两个功能是Bell实验室版awk的扩展功能,在标准awk中不适用.</li>
+<li>-W compact or –compat, -W traditional or –traditional,在兼容模式下运行awk.所以gawk的行为和标准的awk完全一样,所有的awk扩展都被忽略.</li>
+<li>-W copyleft or –copyleft, -W copyright or –copyright,打印简短的版权信息.</li>
+<li>-W help or –help, -W usage or –usage,打印全部awk选项和每个选项的简短说明.</li>
+<li>-W lint or –lint,打印不能向传统unix平台移植的结构的警告.</li>
+<li>-W lint-old or –lint-old,打印关于不能向传统unix平台移植的结构的警告.</li>
+<li>-W posix,打开兼容模式.但有以下限制,不识别：/x,函数关键字,func,换码序列以及当fs是一个空格时,将新行作为一个域分隔符;操作符<strong>和</strong>=不能代替^和^=;fflush无效.</li>
+<li>-W re-interval or –re-inerval,允许间隔正则表达式的使用,参考(grep中的Posix字符类),如括号表达式[[:alpha:]].</li>
+<li>-W source program-text or –source program-text,使用program-text作为源代码,可与-f命令混用.</li>
+<li>-W version or –version,打印bug报告信息的版本.  <h3 id="实战示例-2"><a href="#实战示例-2" class="headerlink" title="实战示例"></a>实战示例</h3>1.按照指定的分隔符取列 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# cut -d: -f 1 /etc/passwd  # cut命令也可以取列</span><br><span class="line">root</span><br><span class="line">bin</span><br><span class="line">daemon</span><br><span class="line">adm</span><br><span class="line">lp</span><br><span class="line">sync</span><br><span class="line">shutdown</span><br><span class="line">halt</span><br><span class="line">mail</span><br><span class="line">[root@litong ~]# awk -F: &apos;&#123;print $1&#125;&apos; /etc/passwd # awk命令取列</span><br><span class="line">root</span><br><span class="line">bin</span><br><span class="line">daemon</span><br><span class="line">adm</span><br><span class="line">lp</span><br><span class="line">sync</span><br><span class="line">shutdown</span><br><span class="line">halt</span><br><span class="line">mail</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="企业实战-用三剑客取IP"><a href="#企业实战-用三剑客取IP" class="headerlink" title="企业实战-用三剑客取IP"></a>企业实战-用三剑客取IP</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@litong ~]# ifconfig eth0 #查看eth0这块网卡的ip</span><br><span class="line">eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet <span class="number">172.21</span>.<span class="number">205.254</span>  netmask <span class="number">255.255</span>.<span class="number">240.0</span>  broadcast <span class="number">172.21</span>.<span class="number">207.255</span></span><br><span class="line">        ether <span class="number">00</span>:<span class="number">16</span>:<span class="number">3</span><span class="keyword">e</span>:<span class="number">00</span>:a1:e1  txqueuelen <span class="number">1000</span>  (Ethernet)</span><br><span class="line">        RX packets <span class="number">599643</span>  bytes <span class="number">144572651</span> (<span class="number">137.8</span> MiB)</span><br><span class="line">        RX errors <span class="number">0</span>  dropped <span class="number">0</span>  overruns <span class="number">0</span>  frame <span class="number">0</span></span><br><span class="line">        TX packets <span class="number">590688</span>  bytes <span class="number">161445142</span> (<span class="number">153.9</span> MiB)</span><br><span class="line">        TX errors <span class="number">0</span>  dropped <span class="number">0</span> overruns <span class="number">0</span>  carrier <span class="number">0</span>  collisions <span class="number">0</span></span><br><span class="line">[root@litong ~]# ifconfig eth0 | <span class="keyword">grep</span> -Po <span class="string">'(?&amp;lt;=inet )\S+'</span>  # <span class="keyword">grep</span>取IP方式一</span><br><span class="line"><span class="number">172.21</span>.<span class="number">205.254</span></span><br><span class="line">[root@litong ~]# ifconfig eth0 | <span class="keyword">grep</span> -<span class="keyword">o</span> <span class="string">"inet [0-9.]*"</span> | <span class="keyword">grep</span> -<span class="keyword">o</span> <span class="string">"[0-9.]*"</span>  # <span class="keyword">grep</span>取IP方式二</span><br><span class="line"><span class="number">172.21</span>.<span class="number">205.254</span></span><br><span class="line">[root@litong ~]# ifconfig eth0 | awk -F <span class="string">"[ ]+"</span> <span class="string">'NR==2 &#123;print $3&#125;'</span>  # awk取IP</span><br><span class="line"><span class="number">172.21</span>.<span class="number">205.254</span></span><br><span class="line">[root@litong ~]# ifconfig eth0 | sed -nr <span class="string">'2s#^[^0-9]*([0-9.]*).*$#\1#gp'</span>  # sed取IP方式一</span><br><span class="line"><span class="number">172.21</span>.<span class="number">205.254</span></span><br><span class="line">[root@litong ~]# ifconfig eth0 | sed -nr <span class="string">'2s#^.*inet (.*) net.*$#\1#gp'</span> # sed取IP方式二</span><br><span class="line"><span class="number">172.21</span>.<span class="number">205.254</span> </span><br><span class="line">[root@litong ~]# ifconfig eth0 | sed -n <span class="string">'2p'</span> | sed <span class="string">'s#^.*inet ##g'</span> | sed <span class="string">'s# netmask.*$##g'</span> # sed取IP方式三</span><br><span class="line"><span class="number">172.21</span>.<span class="number">205.254</span></span><br></pre></td></tr></table></figure>
+<h2 id="相关文档"><a href="#相关文档" class="headerlink" title="相关文档"></a>相关文档</h2><p><a href="http://www.runoob.com/linux/linux-comm-awk.html" target="_blank" rel="noopener">菜鸟教程</a><br><a href="https://www.cnblogs.com/sinsenliu/p/9037386.html" target="_blank" rel="noopener">三剑客取IP</a></p>
+    </div>
+    
+        <div class="reward" ontouchstart="">
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/about/alipay.png"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/about/weixin.png"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">请作者喝杯咖啡吧</p>
+
+    <!-- 社会分享工具 -->
+    <div class="bdsharebuttonbox">
+         <a href="#" class="bds_more" data-cmd="more"></a>
+         <a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+         <a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a>
+         <a href="#" class="bds_weixin" data-cmd="weixin"></a>
+    </div>
+     <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+     </script>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">彤哥哥</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2018/05/24/Spring Cloud-Zuul核心过滤器及异常处理/" class="pre-post btn btn-default" title="Spring Cloud-Zuul核心过滤器及异常处理">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Spring Cloud-Zuul核心过滤器及异常处理</span>
+        </a>
+    
+    
+        <a href="/2018/05/22/Linux基础-wget与curl命令/" class="next-post btn btn-default" title="Linux基础-wget与curl命令">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">Linux基础-wget与curl命令</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'wA3iNQOiAuhrRJkNgIjirA8f-gzGzoHsz',
+            appKey: 'iGL0JyEnJQ8HIMlLd4Sm0oOp',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail,link'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+    </div>
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#正则表达式"><span class="toc-text">正则表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#grep命令"><span class="toc-text">grep命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用选项"><span class="toc-text">常用选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实战示例"><span class="toc-text">实战示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sed命令"><span class="toc-text">sed命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令格式"><span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#取行选项"><span class="toc-text">取行选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#替换选项"><span class="toc-text">替换选项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实战示例-1"><span class="toc-text">实战示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#awk命令"><span class="toc-text">awk命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令格式-1"><span class="toc-text">命令格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选项参数"><span class="toc-text">选项参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实战示例-2"><span class="toc-text">实战示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#企业实战-用三剑客取IP"><span class="toc-text">企业实战-用三剑客取IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关文档"><span class="toc-text">相关文档</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+            </div>
+            <div>
+                <!-- 服务器运行时间统计 -->
+                <span id="sitetime"></span>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    Powered by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">litong</a>
+                </span> |
+                <span>
+                    Blog by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">彤哥哥</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#e67e22', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '  #FDF5E6', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: true || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash"></script>
+<!-- 页面点击小红心，在末尾添加，避免找不到 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- DaoVoice即时通讯工具 -->
+
+ <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "10b503a1"
+    });
+  daovoice('update');
+  </script>
+
+
+<!-- 音频播放 
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+-->
+
+<!-- 服务器运行时间统计 -->
+<script language="javascript">
+        function siteTime(){
+          window.setTimeout("siteTime()", 1000);
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth()+1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+          year - 作为date对象的年份，为4位年份值
+          month - 0-11之间的整数，做为date对象的月份
+          day - 1-31之间的整数，做为date对象的天数
+          hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+          minutes - 0-59之间的整数，做为date对象的分钟数
+          seconds - 0-59之间的整数，做为date对象的秒数
+          microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+          var t1 = Date.UTC(2016,12,1,00,00,00); //北京时间2016-12-1 00:00:00
+          var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+          var diff = t2-t1;
+          var diffYears = Math.floor(diff/years);
+          var diffDays = Math.floor((diff/days)-diffYears*365);
+          var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+          var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+          var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+          document.getElementById("sitetime").innerHTML=" 本站已运行 "+ diffYears+" 年 "+ diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分 "+diffSeconds+" 秒";
+        }
+        siteTime();
+</script>
+</body>

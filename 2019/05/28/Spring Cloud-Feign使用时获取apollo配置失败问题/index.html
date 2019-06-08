@@ -1,0 +1,439 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="彤哥哥的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <link rel="dns-prefetch" href="http://ltyeamin.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="Spring Cloud">
+
+
+    <meta name="description" content="问题描述今天发现一个很诡异的事情，就是本地写死的FeignClient的url属性配置进行feign调用没问题，但是把配置迁移到Ctrip Apollo配置中心feign调用就有问题。
+代码片段...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+
+<title>Spring Cloud-Feign使用时获取apollo配置失败问题 | 彤哥哥的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="彤哥哥的博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+<script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+<link rel="stylesheet" href="/css/calendar.css?rev=@@hash">
+<link rel="stylesheet" href="/css/variable.css?rev=@@hash">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?ebfd000c0e7cc1ee84a00f01d419b1e2";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header" style="background-image:url(http://snippet.shenliyang.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="YeaMin">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                 <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://ltyeamin.github.io">彤哥哥的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa"></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/backend/"><i class="fa"></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/frontend/"><i class="fa"></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/ops/"><i class="fa"></i>运维</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/database/"><i class="fa"></i>数据库</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/algorithm/"><i class="fa"></i>算法</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/pm/"><i class="fa"></i>项目管理</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href=""><i class="fa"></i>自媒体</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/others/"><i class="fa"></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/about"><i class="fa /favicon.ico"></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Spring Cloud-Feign使用时获取apollo配置失败问题">
+            
+	            Spring Cloud-Feign使用时获取apollo配置失败问题
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/backend/">backend</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Spring-Cloud/">Spring Cloud</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/28</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>今天发现一个很诡异的事情，就是本地写死的FeignClient的url属性配置进行feign调用没问题，但是把配置迁移到Ctrip Apollo配置中心feign调用就有问题。</p>
+<h2 id="代码片段"><a href="#代码片段" class="headerlink" title="代码片段"></a>代码片段</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient</span>(url = <span class="string">"$&#123;api.service.baseUrl&#125;"</span>,name = <span class="string">"sms-service"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SmsClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送短信验证码,4位数字,5分钟有效</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"xxxx/xxxxx"</span>)</span><br><span class="line">   <span class="function">ApiResult&lt;String&gt; <span class="title">sendSmsVerifyCode</span><span class="params">(String xxx, Integer xxx)</span> </span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 校验短信验证码</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@PostMapping</span>(<span class="string">"xxxx/xxxxx"</span>)</span><br><span class="line">    <span class="function">ApiResult&lt;String&gt; <span class="title">checkSmsVerifyCode</span><span class="params">(String xxx, Integer codeType,  String xxx)</span> </span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="报错日志"><a href="#报错日志" class="headerlink" title="报错日志"></a>报错日志</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line">feign.RetryableException: $&#123;api.service.baseUrl&#125; executing POST http:<span class="comment">//$&#123;api.service.baseUrl&#125;/xxx/xxx?xxx=18800009999&amp;xxx=8</span></span><br><span class="line">	at feign.FeignException.errorExecuting(FeignException.java:<span class="number">65</span>)</span><br><span class="line">	at feign.SynchronousMethodHandler.executeAndDecode(SynchronousMethodHandler.java:<span class="number">105</span>)</span><br><span class="line">	at feign.SynchronousMethodHandler.invoke(SynchronousMethodHandler.java:<span class="number">77</span>)</span><br><span class="line">	at feign.ReflectiveFeign$FeignInvocationHandler.invoke(ReflectiveFeign.java:<span class="number">102</span>)</span><br><span class="line">	at com.sun.proxy.$Proxy148.sendSmsVerifyCode(Unknown Source)</span><br><span class="line">	at com.yimi.darwin.biz.open.copartner.service.impl.SmsServiceImpl.sendVerifyCode(SmsServiceImpl.java:<span class="number">33</span>)</span><br><span class="line">	at com.yimi.darwin.biz.open.copartner.controller.SmsController.sendVerifyCode(SmsController.java:<span class="number">62</span>)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:<span class="number">62</span>)</span><br><span class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Method.java:<span class="number">498</span>)</span><br><span class="line">	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:<span class="number">209</span>)</span><br><span class="line">	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:<span class="number">136</span>)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:<span class="number">102</span>)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:<span class="number">891</span>)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:<span class="number">797</span>)</span><br><span class="line">	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:<span class="number">87</span>)</span><br><span class="line">	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:<span class="number">991</span>)</span><br><span class="line">	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:<span class="number">925</span>)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:<span class="number">974</span>)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:<span class="number">877</span>)</span><br><span class="line">	at javax.servlet.http.HttpServlet.service(HttpServlet.java:<span class="number">665</span>)</span><br><span class="line">	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:<span class="number">851</span>)</span><br><span class="line">	at javax.servlet.http.HttpServlet.service(HttpServlet.java:<span class="number">750</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletHandler.handleRequest(ServletHandler.java:<span class="number">74</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">129</span>)</span><br><span class="line">	at org.springframework.boot.actuate.web.trace.servlet.HttpTraceFilter.doFilterInternal(HttpTraceFilter.java:<span class="number">90</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">107</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at com.yimi.tools.filter.RequestAndResponseLoggingFilter.doFilterWrapped(RequestAndResponseLoggingFilter.java:<span class="number">55</span>)</span><br><span class="line">	at com.yimi.tools.filter.RequestAndResponseLoggingFilter.doFilterInternal(RequestAndResponseLoggingFilter.java:<span class="number">47</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">107</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:<span class="number">99</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">107</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:<span class="number">109</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">107</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:<span class="number">93</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">107</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at org.springframework.cloud.sleuth.instrument.web.ExceptionLoggingFilter.doFilter(ExceptionLoggingFilter.java:<span class="number">48</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at brave.servlet.TracingFilter.doFilter(TracingFilter.java:<span class="number">86</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at org.springframework.boot.actuate.metrics.web.servlet.WebMvcMetricsFilter.filterAndRecordMetrics(WebMvcMetricsFilter.java:<span class="number">155</span>)</span><br><span class="line">	at org.springframework.boot.actuate.metrics.web.servlet.WebMvcMetricsFilter.filterAndRecordMetrics(WebMvcMetricsFilter.java:<span class="number">123</span>)</span><br><span class="line">	at org.springframework.boot.actuate.metrics.web.servlet.WebMvcMetricsFilter.doFilterInternal(WebMvcMetricsFilter.java:<span class="number">108</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">107</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:<span class="number">200</span>)</span><br><span class="line">	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:<span class="number">107</span>)</span><br><span class="line">	at io.undertow.servlet.core.ManagedFilter.doFilter(ManagedFilter.java:<span class="number">61</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler$FilterChainImpl.doFilter(FilterHandler.java:<span class="number">131</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.FilterHandler.handleRequest(FilterHandler.java:<span class="number">84</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.security.ServletSecurityRoleHandler.handleRequest(ServletSecurityRoleHandler.java:<span class="number">62</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletChain$<span class="number">1</span>.handleRequest(ServletChain.java:<span class="number">65</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletDispatchingHandler.handleRequest(ServletDispatchingHandler.java:<span class="number">36</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.security.SSLInformationAssociationHandler.handleRequest(SSLInformationAssociationHandler.java:<span class="number">132</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler.handleRequest(ServletAuthenticationCallHandler.java:<span class="number">57</span>)</span><br><span class="line">	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:<span class="number">43</span>)</span><br><span class="line">	at io.undertow.security.handlers.AbstractConfidentialityHandler.handleRequest(AbstractConfidentialityHandler.java:<span class="number">46</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.security.ServletConfidentialityConstraintHandler.handleRequest(ServletConfidentialityConstraintHandler.java:<span class="number">64</span>)</span><br><span class="line">	at io.undertow.security.handlers.AuthenticationMechanismsHandler.handleRequest(AuthenticationMechanismsHandler.java:<span class="number">60</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.security.CachedAuthenticatedSessionHandler.handleRequest(CachedAuthenticatedSessionHandler.java:<span class="number">77</span>)</span><br><span class="line">	at io.undertow.security.handlers.AbstractSecurityContextAssociationHandler.handleRequest(AbstractSecurityContextAssociationHandler.java:<span class="number">43</span>)</span><br><span class="line">	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:<span class="number">43</span>)</span><br><span class="line">	at io.undertow.server.handlers.PredicateHandler.handleRequest(PredicateHandler.java:<span class="number">43</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler.handleFirstRequest(ServletInitialHandler.java:<span class="number">292</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler.access$<span class="number">100</span>(ServletInitialHandler.java:<span class="number">81</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler$<span class="number">2</span>.call(ServletInitialHandler.java:<span class="number">138</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler$<span class="number">2</span>.call(ServletInitialHandler.java:<span class="number">135</span>)</span><br><span class="line">	at io.undertow.servlet.core.ServletRequestContextThreadSetupAction$<span class="number">1</span>.call(ServletRequestContextThreadSetupAction.java:<span class="number">48</span>)</span><br><span class="line">	at io.undertow.servlet.core.ContextClassLoaderSetupAction$<span class="number">1</span>.call(ContextClassLoaderSetupAction.java:<span class="number">43</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler.dispatchRequest(ServletInitialHandler.java:<span class="number">272</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler.access$<span class="number">000</span>(ServletInitialHandler.java:<span class="number">81</span>)</span><br><span class="line">	at io.undertow.servlet.handlers.ServletInitialHandler$<span class="number">1</span>.handleRequest(ServletInitialHandler.java:<span class="number">104</span>)</span><br><span class="line">	at io.undertow.server.Connectors.executeRootHandler(Connectors.java:<span class="number">336</span>)</span><br><span class="line">	at io.undertow.server.HttpServerExchange$<span class="number">1</span>.run(HttpServerExchange.java:<span class="number">830</span>)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:<span class="number">1149</span>)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:<span class="number">624</span>)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:<span class="number">748</span>)</span><br><span class="line">Caused by: java.net.UnknownHostException: $&#123;api.service.baseUrl&#125;</span><br><span class="line">	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:<span class="number">184</span>)</span><br><span class="line">	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:<span class="number">392</span>)</span><br><span class="line">	at java.net.Socket.connect(Socket.java:<span class="number">589</span>)</span><br><span class="line">	at sun.net.NetworkClient.doConnect(NetworkClient.java:<span class="number">175</span>)</span><br><span class="line">	at sun.net.www.http.HttpClient.openServer(HttpClient.java:<span class="number">463</span>)</span><br><span class="line">	at sun.net.www.http.HttpClient.openServer(HttpClient.java:<span class="number">558</span>)</span><br><span class="line">	at sun.net.www.http.HttpClient.&lt;init&gt;(HttpClient.java:<span class="number">242</span>)</span><br><span class="line">	at sun.net.www.http.HttpClient.New(HttpClient.java:<span class="number">339</span>)</span><br><span class="line">	at sun.net.www.http.HttpClient.New(HttpClient.java:<span class="number">357</span>)</span><br><span class="line">	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:<span class="number">1220</span>)</span><br><span class="line">	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:<span class="number">1156</span>)</span><br><span class="line">	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:<span class="number">1050</span>)</span><br><span class="line">	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:<span class="number">984</span>)</span><br><span class="line">	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:<span class="number">1564</span>)</span><br><span class="line">	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:<span class="number">1492</span>)</span><br><span class="line">	at java.net.HttpURLConnection.getResponseCode(HttpURLConnection.java:<span class="number">480</span>)</span><br><span class="line">	at feign.Client$Default.convertResponse(Client.java:<span class="number">150</span>)</span><br><span class="line">	at feign.Client$Default.execute(Client.java:<span class="number">72</span>)</span><br><span class="line">	at org.springframework.cloud.sleuth.instrument.web.client.feign.TracingFeignClient.execute(TracingFeignClient.java:<span class="number">91</span>)</span><br><span class="line">	at org.springframework.cloud.sleuth.instrument.web.client.feign.LazyTracingFeignClient.execute(LazyTracingFeignClient.java:<span class="number">55</span>)</span><br><span class="line">	at feign.SynchronousMethodHandler.executeAndDecode(SynchronousMethodHandler.java:<span class="number">98</span>)</span><br><span class="line">	... <span class="number">89</span> common frames omitted</span><br></pre></td></tr></table></figure>
+<h2 id="问题分析与解决"><a href="#问题分析与解决" class="headerlink" title="问题分析与解决"></a>问题分析与解决</h2><p>我们从报错日志发现，api.service.baseUrl这个配置注入失败。</p>
+<p>我为了验证，专门写一个测试接口，查看配置到底有没有加载：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;api.service.baseUrl&#125;"</span>)</span><br><span class="line"><span class="keyword">private</span> String url;</span><br><span class="line"></span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/url"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getUrl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> url;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过调用localhost:8301/url，接口响应了结果：<a href="https://xxx.com/" target="_blank" rel="noopener">https://xxx.com/</a>,</p>
+<p>此时，我们发现，项目中api.service.baseUrl却能拿到值，说明整个项目配置是OK的。</p>
+<p>紧接着我们去apollo官方的github上找答案，也是在官方<a href="https://github.com/ctripcorp/apollo/issues?page=1&amp;q=is%3Aissue+is%3Aopen" target="_blank" rel="noopener">issue</a>和<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97#3213-spring-boot%E9%9B%86%E6%88%90%E6%96%B9%E5%BC%8F%E6%8E%A8%E8%8D%90" target="_blank" rel="noopener">wiki</a>找到答案的。</p>
+<p>当项目启动时候，会扫描@FeignClient注解，扫描的过程中，会注入url的值。但此时apollo配置是在Feign扫描后加载的，其实解决方案就是让apollo先于feign的扫描加载，即apollo配置饥饿加载。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># will inject &apos;application&apos; namespace in bootstrap phase</span><br><span class="line">apollo.bootstrap.enabled = true</span><br><span class="line"># put apollo initialization before logging system initialization</span><br><span class="line">apollo.bootstrap.eagerLoad.enabled=true</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Spring Boot除了支持上述两种集成方式以外，还支持通过application.properties/bootstrap.properties来配置，该方式能使配置在更早的阶段注入，比如使用@ConditionalOnProperty的场景或者是有一些spring-boot-starter在启动阶段就需要读取配置做一些事情（如dubbo-spring-boot-project），所以对于Spring Boot环境建议通过以下方式来接入Apollo(需要0.10.0及以上版本）。<br> 从1.2.0版本开始，如果希望把日志相关的配置（如logging.level.root=info或logback-spring.xml中的参数）也放在Apollo管理，那么可以额外配置apollo.bootstrap.eagerLoad.enabled=true来使Apollo的加载顺序放到日志系统加载之前，不过这会导致Apollo的启动过程无法通过日志的方式输出(因为执行Apollo加载的时候，日志系统压根没有准备好呢！所以在Apollo代码中使用Slf4j的日志输出便没有任何内容)，更多信息可以参考PR 1614。参考配置示例如下：<br> # will inject ‘application’ namespace in bootstrap phase<br> apollo.bootstrap.enabled = true<br> # put apollo initialization before logging system initialization<br> apollo.bootstrap.eagerLoad.enabled=true</p>
+</blockquote>
+<p>值得注意的是，如果您的apollo client依赖版本是1.1.0及以下的，加了以上的配置，发现是没有用的。我们可以尝试手动去加载。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.ctrip.framework.apollo.ConfigService;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClientUrlConfig</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.initSet(<span class="string">"此处写你需要提前初始化的key"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initSet</span><span class="params">(String... keys)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (String key : keys) &#123;</span><br><span class="line">            String val = ConfigService.getAppConfig().getProperty(key, <span class="keyword">null</span>);</span><br><span class="line">            System.setProperty(key, val);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在<code>SpringApplication.run()</code> 之前加载</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">new</span> ClientUrlConfig().init();</span><br><span class="line">       SpringApplication.run(Application.class, args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>手动加载后，我们就可以正常使用 ${api.service.baseUrl}进行加载以及Feign调用了。</p>
+    </div>
+    
+        <div class="reward" ontouchstart="">
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/about/alipay.png"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/about/weixin.png"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">请作者喝杯咖啡吧</p>
+
+    <!-- 社会分享工具 -->
+    <div class="bdsharebuttonbox">
+         <a href="#" class="bds_more" data-cmd="more"></a>
+         <a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+         <a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a>
+         <a href="#" class="bds_weixin" data-cmd="weixin"></a>
+    </div>
+     <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+     </script>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">彤哥哥</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/06/03/Windows搜索利器/" class="pre-post btn btn-default" title="Windows搜索利器">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Windows搜索利器</span>
+        </a>
+    
+    
+        <a href="/2019/04/02/聊聊Java锁的那些事/" class="next-post btn btn-default" title="聊聊Java锁的那些事">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">聊聊Java锁的那些事</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'wA3iNQOiAuhrRJkNgIjirA8f-gzGzoHsz',
+            appKey: 'iGL0JyEnJQ8HIMlLd4Sm0oOp',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail,link'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+    </div>
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题描述"><span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码片段"><span class="toc-text">代码片段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#报错日志"><span class="toc-text">报错日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问题分析与解决"><span class="toc-text">问题分析与解决</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+            </div>
+            <div>
+                <!-- 服务器运行时间统计 -->
+                <span id="sitetime"></span>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    Powered by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">litong</a>
+                </span> |
+                <span>
+                    Blog by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">彤哥哥</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#e67e22', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '  #FDF5E6', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: true || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash"></script>
+<!-- 页面点击小红心，在末尾添加，避免找不到 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- DaoVoice即时通讯工具 -->
+
+ <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "10b503a1"
+    });
+  daovoice('update');
+  </script>
+
+
+<!-- 音频播放 
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+-->
+
+<!-- 服务器运行时间统计 -->
+<script language="javascript">
+        function siteTime(){
+          window.setTimeout("siteTime()", 1000);
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth()+1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+          year - 作为date对象的年份，为4位年份值
+          month - 0-11之间的整数，做为date对象的月份
+          day - 1-31之间的整数，做为date对象的天数
+          hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+          minutes - 0-59之间的整数，做为date对象的分钟数
+          seconds - 0-59之间的整数，做为date对象的秒数
+          microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+          var t1 = Date.UTC(2016,12,1,00,00,00); //北京时间2016-12-1 00:00:00
+          var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+          var diff = t2-t1;
+          var diffYears = Math.floor(diff/years);
+          var diffDays = Math.floor((diff/days)-diffYears*365);
+          var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+          var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+          var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+          document.getElementById("sitetime").innerHTML=" 本站已运行 "+ diffYears+" 年 "+ diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分 "+diffSeconds+" 秒";
+        }
+        siteTime();
+</script>
+</body>

@@ -1,0 +1,501 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="彤哥哥的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <link rel="dns-prefetch" href="http://ltyeamin.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="RabbitMQ">
+
+
+    <meta name="description" content="之所以今天写RabbitMQ学习专栏，主要是因为自己没有真正的系统学习过。之前工作经历中都是为用MQ而用的MQ，对MQ整个内部机制没有一个深入的了解和系统的学习。比如我们用Spring Clou...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+    <!--Title-->
+
+
+<title>RabbitMQ概述 | 彤哥哥的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="彤哥哥的博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+<script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css?rev=@@hash">
+<link rel="stylesheet" href="/css/calendar.css?rev=@@hash">
+<link rel="stylesheet" href="/css/variable.css?rev=@@hash">
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?ebfd000c0e7cc1ee84a00f01d419b1e2";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+<body>
+    <header class="main-header" style="background-image:url(http://snippet.shenliyang.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="YeaMin">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                 <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://ltyeamin.github.io">彤哥哥的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa"></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/backend/"><i class="fa"></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/frontend/"><i class="fa"></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/ops/"><i class="fa"></i>运维</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/database/"><i class="fa"></i>数据库</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/algorithm/"><i class="fa"></i>算法</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/pm/"><i class="fa"></i>项目管理</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href=""><i class="fa"></i>自媒体</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/others/"><i class="fa"></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/about"><i class="fa /favicon.ico"></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="RabbitMQ概述">
+            
+	            RabbitMQ概述
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/backend/">backend</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/RabbitMQ/">RabbitMQ</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2018/06/11</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+            <p class="fa fa-exclamation-triangle warning">
+                本文于<strong>362</strong>天之前发表，文中内容可能已经过时
+            </p>
+        
+    </div>
+    
+    <div class="post-body post-content">
+        <p>之所以今天写RabbitMQ学习专栏，主要是因为自己没有真正的系统学习过。之前工作经历中都是为用MQ而用的MQ，对MQ整个内部机制没有一个深入的了解和系统的学习。比如我们用Spring Cloud Stream或Spring Cloud Bus组件时候，我们会经常碰到MQ。MQ产品市面上有很多种，不同MQ产品有不同的适应场景(领域)。这就和学什么语言一样，不分什么好坏。</p>
+<p>在这我要插上一句，在讨论技术选型的时候，我经常听到很多人说哪种技术好，哪种技术坏，哪种技术流行，哪种技术淘汰。其实正解应该是每种技术方案有自己适应领域，存在即合理。面试的时候经常有面试官询问技术方案选型。什么Spring Cloud和Dubbo比（压根就不是一个领域，Spring Cloud是整套的微服务落地方案，Dubbo只是一个具有客户端负载均衡的高性能RPC框架，论功能Dubbo只是Spring Cloud的一个子集），什么Redis和MongoDB比，ES和Solr比，各种MQ的比较，其实我觉得问这些面试题是有局限性的，没有具体业务场景就是无解，具体选型还是要根据当前公司的现有业务和系统现状来选型。我觉得面试官应该先把公司的业务场景说出来，然后应聘者根据公司的业务进行客观性评定。</p>
+<p>好了，言归正传，常见的高级的MQ产品有RabbitMQ、Apache ActiveMQ、Apache RocketMQ(Alibaba捐赠)、Apache Kafka(LinkedIn捐赠) 。那么，今天我这里选择RabbitMQ进行学习，其他MQ学习都是相通的，读者可根据自身情况阅读官网文档并进行学习。我这里只是介绍一种学习方式。下面从官方文档以及其他资料给大家进行梳理RabbitMQ系列的知识。</p>
+<h2 id="MQ消息队列"><a href="#MQ消息队列" class="headerlink" title="MQ消息队列"></a>MQ消息队列</h2><h3 id="MQ概述"><a href="#MQ概述" class="headerlink" title="MQ概述"></a>MQ概述</h3><p>消息队列技术是分布式应用间交换信息的一种技术。</p>
+<p>消息队列可驻留在内存或磁盘上,队列存储消息直到它们被应用程序读走。</p>
+<p>通过消息队列，应用程序可独立地执行。它们不需要知道彼此的位置、或在继续执行前不需要等待接收程序接收此消息。</p>
+<p>MQ主要作用是接受和转发消息。你可以想想在生活中的一种场景：当你把信件的投进邮筒，邮递员肯定最终会将信件送给收件人。我们可以把MQ比作 邮局和邮递员。</p>
+<p>MQ和邮局的主要区别是,它不处理消息,但是,它会接受数据、存储消息数据、转发消息。</p>
+<h3 id="MQ应用场景"><a href="#MQ应用场景" class="headerlink" title="MQ应用场景"></a>MQ应用场景</h3><ul>
+<li><p>应用解耦: 系统异步化改造；</p>
+<ol>
+<li>用户注册后的邮件发送、验证码短信发送；</li>
+<li>分布式延时队列应用，用户下单后，24小时未支付，需要取消订单，我们只需要下单时用MQ发个消息通知一下，客户端延时（下单时间24小时后）执行，消费成功则证明取消订单成功。</li>
+</ol>
+</li>
+<li><p>异步通知及数据同步: 提升系统性能，保证数据最终一致性；</p>
+<ol>
+<li>用户在管理页面更新数据，通过MQ异步通知，更新缓存、更新ES或Solr索引</li>
+</ol>
+</li>
+<li><p>应用限流: 可以保证并发场景下系统的稳定性；</p>
+<ol>
+<li>抢票系统，在并发大系统有瓶颈的情况下，可以将请求打到MQ队列依次限流消费。</li>
+<li>分布式日志系统数据很大的时候，MQ作为分布式日志的缓冲层，典型应用就是ELK+Kafaka。</li>
+</ol>
+</li>
+<li><p>数据分发: 一对多或广播的模式进行数据分发；</p>
+<ol>
+<li>支付完成后，需要及时的通知子系统（进销存系统发货，用户服务积分，发送短信）</li>
+</ol>
+</li>
+<li><p>分布式事务: 分布式架构的系统可以通过MQ的队列数据进行数据回滚操作</p>
+</li>
+</ul>
+<h2 id="RabbitMQ产品介绍"><a href="#RabbitMQ产品介绍" class="headerlink" title="RabbitMQ产品介绍"></a>RabbitMQ产品介绍</h2><h3 id="RabbitMQ产品"><a href="#RabbitMQ产品" class="headerlink" title="RabbitMQ产品"></a>RabbitMQ产品</h3><p>打开RabbitMQ官网首页，能看到如下的一句话:</p>
+<blockquote>
+<p>RabbitMQ is the most widely deployed open source message broker.</p>
+</blockquote>
+<p>翻译为：RabbitMQ是部署最广泛的开源消息代理。</p>
+<p>RabbitMQ是一个Erlang开发的AMQP（Advanced Message Queuing Protocol ）的开源实现。AMQP 的出现其实也是应了广大人民群众的需求，虽然在同步消息通讯的世界里有很多公开标准（如 Cobar）的 IIOP ，或者是 SOAP 等），但是在异步消息处理中却不是这样，只有大企业有一些商业实现（如微软的 MSMQ ，IBM 的 WebSphere MQ 等），因此，在 2006 年的 6 月，Cisco 、Red Hat、iMatix 等联合制定了 AMQP 的公开标准。</p>
+<p>RabbitMQ由RabbitMQ Technologies Ltd开发并且提供商业支持的。该公司在2010年4月被SpringSource（VMware的一个部门）收购。在2013年5月被并入Pivotal。其实VMware，Pivotal和EMC本质上是一家的。不同的是，VMware是独立上市子公司，而Pivotal是整合了EMC的某些资源，现在并没有上市。</p>
+<h3 id="RabbitMQ产品特性"><a href="#RabbitMQ产品特性" class="headerlink" title="RabbitMQ产品特性"></a>RabbitMQ产品特性</h3><ul>
+<li>开源免费；</li>
+<li>可伸缩性：集群服务；</li>
+<li>消息持久化：从内存持久化消息到硬盘，再从硬盘加载到内存；</li>
+<li>多语言多客户端支持，支持Python、Java、Ruby、PHP、C#、JavaScript、Go、Elixir、Objective-C、Swift、Spring AMQP。</li>
+</ul>
+<h3 id="RabbitMQ常用模式"><a href="#RabbitMQ常用模式" class="headerlink" title="RabbitMQ常用模式"></a>RabbitMQ常用模式</h3><p>打开<a href="https://www.rabbitmq.com/getstarted.html" target="_blank" rel="noopener">官方文档</a>，我们眼前一亮，会看到如下6种RabbitMQ的工作模式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">1. <a href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html" target="_blank" rel="noopener">“Hello World!”</a><br> The simplest thing that does <em>something</em> <img src="https://www.rabbitmq.com/img/tutorials/python-one.png" alt="img">       <a href="https://www.rabbitmq.com/tutorials/tutorial-one-java.html" target="_blank" rel="noopener">Java</a> <a href="https://www.rabbitmq.com/tutorials/tutorial-one-spring-amqp.html" target="_blank" rel="noopener">Spring AMQP</a></th>
+<th style="text-align:left">2. <a href="https://www.rabbitmq.com/tutorials/tutorial-two-python.html" target="_blank" rel="noopener">Work queues</a><br> Distributing tasks among workers (the <a href="http://www.enterpriseintegrationpatterns.com/patterns/messaging/CompetingConsumers.html" target="_blank" rel="noopener">competing consumers pattern</a>)<img src="https://www.rabbitmq.com/img/tutorials/python-two.png" alt="img">       <a href="https://www.rabbitmq.com/tutorials/tutorial-two-java.html" target="_blank" rel="noopener">Java</a> <a href="https://www.rabbitmq.com/tutorials/tutorial-two-spring-amqp.html" target="_blank" rel="noopener">Spring AMQP</a></th>
+<th>3. <a href="https://www.rabbitmq.com/tutorials/tutorial-three-python.html" target="_blank" rel="noopener">Publish/Subscribe</a><br> Sending messages to many consumers at once<img src="https://www.rabbitmq.com/img/tutorials/python-three.png" alt="img">       <a href="https://www.rabbitmq.com/tutorials/tutorial-three-java.html" target="_blank" rel="noopener">Java</a> <a href="https://www.rabbitmq.com/tutorials/tutorial-three-spring-amqp.html" target="_blank" rel="noopener">Spring AMQP</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">4. <a href="https://www.rabbitmq.com/tutorials/tutorial-four-python.html" target="_blank" rel="noopener">Routing</a><br>Receiving messages selectively<img src="https://www.rabbitmq.com/img/tutorials/python-four.png" alt="img">       <a href="https://www.rabbitmq.com/tutorials/tutorial-four-java.html" target="_blank" rel="noopener">Java</a> <a href="https://www.rabbitmq.com/tutorials/tutorial-four-spring-amqp.html" target="_blank" rel="noopener">Spring AMQP</a></td>
+<td style="text-align:left">5.  <a href="https://www.rabbitmq.com/tutorials/tutorial-five-python.html" target="_blank" rel="noopener">Topics</a><br> The simplest thing that does <em>something</em> <img src="https://www.rabbitmq.com/img/tutorials/python-five.png" alt="img">       <a href="https://www.rabbitmq.com/tutorials/tutorial-five-java.html" target="_blank" rel="noopener">Java</a> <a href="https://www.rabbitmq.com/tutorials/tutorial-five-spring-amqp.html" target="_blank" rel="noopener">Spring AMQP</a></td>
+<td>6. <a href="https://www.rabbitmq.com/tutorials/tutorial-six-python.html" target="_blank" rel="noopener">RPC</a><br> <a href="http://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html" target="_blank" rel="noopener">Request/reply pattern</a>example<img src="https://www.rabbitmq.com/img/tutorials/python-six.png" alt="img">       <a href="https://www.rabbitmq.com/tutorials/tutorial-six-java.html" target="_blank" rel="noopener">Java</a> <a href="https://www.rabbitmq.com/tutorials/tutorial-six-spring-amqp.html" target="_blank" rel="noopener">Spring AMQP</a></td>
+</tr>
+</tbody>
+</table>
+<p>看到上述的6种工作模式，其中我们日常使用最多的是前5种模式，我们列一个学习列表: </p>
+<ul>
+<li><a href="http://www.baidu.com" target="_blank" rel="noopener">简单模式</a>: 一个生产者，一个消费者</li>
+<li><a href="http://www.baidu.com" target="_blank" rel="noopener">Work模式</a>: 一个生产者，多个消费者，每个消费者获取到的消息唯一。</li>
+<li><a href="http://www.baidu.com" target="_blank" rel="noopener">订阅模式</a>: 一个生产者发送的消息会被多个消费者获取。</li>
+<li><a href="http://www.baidu.com" target="_blank" rel="noopener">路由模式</a>: 发送消息到交换机并且要指定路由key ，消费者将队列绑定到交换机时需要指定路由key</li>
+<li><a href="http://www.baidu.com" target="_blank" rel="noopener">Topic模式</a>: 将路由键和某模式进行匹配，此时队列需要绑定在一个模式上，“#”匹配一个词或多个词，“*”只匹配一个词。</li>
+<li><a href="">RPC远程调用</a>：几乎不用，暂时先不考虑</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.rabbitmq.com/getstarted.html" target="_blank" rel="noopener">RabbitMQ官网快速入门文档</a></li>
+<li><a href="http://www.java1234.com/a/javabook/javabase/2018/0728/11620.html" target="_blank" rel="noopener">《RabbitMQ实战指南》朱忠华著</a></li>
+<li><a href="https://my.oschina.net/u/3777556/blog/3035943" target="_blank" rel="noopener">什么是消息队列</a></li>
+</ul>
+    </div>
+    
+        <div class="reward" ontouchstart="">
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/about/alipay.png"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/about/weixin.png"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">请作者喝杯咖啡吧</p>
+
+    <!-- 社会分享工具 -->
+    <div class="bdsharebuttonbox">
+         <a href="#" class="bds_more" data-cmd="more"></a>
+         <a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a>
+         <a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a>
+         <a href="#" class="bds_weixin" data-cmd="weixin"></a>
+    </div>
+     <script>
+        window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+     </script>
+</div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">彤哥哥</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2018/06/12/RabbitMQ工作模式之简单模式/" class="pre-post btn btn-default" title="RabbitMQ工作模式之简单模式">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">RabbitMQ工作模式之简单模式</span>
+        </a>
+    
+    
+        <a href="/2018/06/10/Docker安装分布式消息中间件-RabbitMQ/" class="next-post btn btn-default" title="Docker安装分布式消息中间件-RabbitMQ">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">Docker安装分布式消息中间件-RabbitMQ</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'wA3iNQOiAuhrRJkNgIjirA8f-gzGzoHsz',
+            appKey: 'iGL0JyEnJQ8HIMlLd4Sm0oOp',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail,link'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+    </div>
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MQ消息队列"><span class="toc-text">MQ消息队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MQ概述"><span class="toc-text">MQ概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MQ应用场景"><span class="toc-text">MQ应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMQ产品介绍"><span class="toc-text">RabbitMQ产品介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitMQ产品"><span class="toc-text">RabbitMQ产品</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitMQ产品特性"><span class="toc-text">RabbitMQ产品特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitMQ常用模式"><span class="toc-text">RabbitMQ常用模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
+        
+    </div>
+</aside>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+            </div>
+            <div>
+                <!-- 服务器运行时间统计 -->
+                <span id="sitetime"></span>
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    Powered by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">litong</a>
+                </span> |
+                <span>
+                    Blog by <a href="//ltyeamin.github.io" class="copyright-links" target="_blank" rel="nofollow">彤哥哥</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#e67e22', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '  #FDF5E6', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: true || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js?rev=@@hash"></script>
+<!-- 页面点击小红心，在末尾添加，避免找不到 -->
+<script type="text/javascript" src="/js/love.js"></script>
+
+<!-- DaoVoice即时通讯工具 -->
+
+ <script>
+  (function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/0f81ff2f.js","daovoice")
+  daovoice('init', {
+      app_id: "10b503a1"
+    });
+  daovoice('update');
+  </script>
+
+
+<!-- 音频播放 
+<link rel="stylesheet" href="/dist/APlayer.min.css">
+<div id="aplayer"></div>
+<script type="text/javascript" src="/dist/APlayer.min.js"></script>
+<script type="text/javascript" src="/dist/music.js"></script>
+-->
+
+<!-- 服务器运行时间统计 -->
+<script language="javascript">
+        function siteTime(){
+          window.setTimeout("siteTime()", 1000);
+          var seconds = 1000;
+          var minutes = seconds * 60;
+          var hours = minutes * 60;
+          var days = hours * 24;
+          var years = days * 365;
+          var today = new Date();
+          var todayYear = today.getFullYear();
+          var todayMonth = today.getMonth()+1;
+          var todayDate = today.getDate();
+          var todayHour = today.getHours();
+          var todayMinute = today.getMinutes();
+          var todaySecond = today.getSeconds();
+          /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+          year - 作为date对象的年份，为4位年份值
+          month - 0-11之间的整数，做为date对象的月份
+          day - 1-31之间的整数，做为date对象的天数
+          hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+          minutes - 0-59之间的整数，做为date对象的分钟数
+          seconds - 0-59之间的整数，做为date对象的秒数
+          microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+          var t1 = Date.UTC(2016,12,1,00,00,00); //北京时间2016-12-1 00:00:00
+          var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+          var diff = t2-t1;
+          var diffYears = Math.floor(diff/years);
+          var diffDays = Math.floor((diff/days)-diffYears*365);
+          var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+          var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+          var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+          document.getElementById("sitetime").innerHTML=" 本站已运行 "+ diffYears+" 年 "+ diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分 "+diffSeconds+" 秒";
+        }
+        siteTime();
+</script>
+</body>
