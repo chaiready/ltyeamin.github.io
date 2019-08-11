@@ -16,10 +16,11 @@
     <link rel="dns-prefetch" href="http://ltyeamin.github.io">
     <!--SEO-->
 
-    <meta name="keywords" content="Spring">
+    <meta name="keywords" content="实用工具及技巧">
 
 
-    <meta name="description" content="Spring容器容器是Spring框架的核心.Spring容器使用DI管理构成应用的组件,他会创建相互协作的组件之间的关联.Spring容器并不是只有一个.Spring自带多个容器实现,可归纳为...">
+    <meta name="description" content="今天在家下载一个别人给我的百度网盘资料，资料大小差不多2个G,但是打开浏览器发现有一件是非常烦躁的事情:小文件可以直接在浏览器端进行下载,但是大文件必须下载百度网盘客户端进行下载.
+没办法,我只...">
 
 
 
@@ -30,7 +31,7 @@
     <!--Title-->
 
 
-<title>Spring容器以及Bean的生命周期 | 彤哥哥的博客</title>
+<title>百度网盘破速解决 | 彤哥哥的博客</title>
 
 
     <link rel="alternate" href="/atom.xml" title="彤哥哥的博客" type="application/atom+xml">
@@ -146,16 +147,16 @@
                     <p id="process"></p>
 <article class="post">
     <div class="post-head">
-        <h1 id="Spring容器以及Bean的生命周期">
+        <h1 id="百度网盘破速解决">
             
-	            Spring容器以及Bean的生命周期
+	            百度网盘破速解决
             
         </h1>
         <div class="post-meta">
     
         <span class="categories-meta fa-wrap">
             <i class="fa fa-folder-open-o"></i>
-            <a class="category-link" href="/categories/backend/">backend</a>
+            <a class="category-link" href="/categories/ops/">ops</a>
         </span>
     
 
@@ -164,7 +165,7 @@
             <i class="fa fa-tags"></i>
             <span class="tags-meta">
                 
-                    <a class="tag-link" href="/tags/Spring/">Spring</a>
+                    <a class="tag-link" href="/tags/实用工具及技巧/">实用工具及技巧</a>
                 
             </span>
         </span>
@@ -174,7 +175,7 @@
         
         <span class="fa-wrap">
             <i class="fa fa-clock-o"></i>
-            <span class="date-meta">2018/05/15</span>
+            <span class="date-meta">2019/08/11</span>
         </span>
         
             <span class="fa-wrap">
@@ -186,42 +187,28 @@
 </div>
             
             
-            <p class="fa fa-exclamation-triangle warning">
-                本文于<strong>453</strong>天之前发表，文中内容可能已经过时
-            </p>
-        
     </div>
     
     <div class="post-body post-content">
-        <h2 id="Spring容器"><a href="#Spring容器" class="headerlink" title="Spring容器"></a>Spring容器</h2><p>容器是Spring框架的核心.Spring容器使用DI管理构成应用的组件,他会创建相互协作的组件之间的关联.<br>Spring容器并不是只有一个.Spring自带多个容器实现,可归纳为两种不同的类型:</p>
-<ul>
-<li>Bean工厂(由BeanFactory接口定义)是最简单的同期,提供基本的DI支持.</li>
-<li>应用上下文(由ApplicationContext接口定义)基于BeanFactory构建,并提供应用框架级别的服务.</li>
-</ul>
-<p>虽然我们可以在Bean工厂和应用上下文任选一种作为我们的容器,但BeanFactory是ApplicationContext的顶层接口,功能比较少,不能满足我们日常应用的需求.因此应用上下文更受大家的欢迎.</p>
-<p>Spring自带了多种类型的应用上下文,下面罗列几个常用的:</p>
-<ul>
-<li>AnnotationConfigApplicationContext:从一个或多个基于Java的配置类中加载Spring应用上下文.Spring4之后推荐使用,Spring Boot,Spring Cloud等自动配置都是基于Java Config.</li>
-<li>AnnotationConfigWebApplicationContext:从一个或多个基于Java的配置类中加载Spring Web上下文.</li>
-<li>ClassPathXmlApplicationContext: 从classpath路径下的一个或多个XML配置加载上下文.Spring 4之前常常以classpath下文件方式进行加载.</li>
-<li>FileSystemXmlApplicationContext: 从文件系统下的一个或多个XML配置文件中加载上下文定义.一般不用</li>
-<li>XmlWebApplicationContext: 从Web应用下的一个或多个XML配置加载上下文.以前老的Web项目常用的加载方式.</li>
-</ul>
-<h2 id="Bean的生命周期"><a href="#Bean的生命周期" class="headerlink" title="Bean的生命周期"></a>Bean的生命周期</h2><p>在传统的Java编程模式中,使用Java对象关键字new或者利用反射机制进行对象实例化,这些”Bean”实例化后方可使用.到了某个时期这些对象不再被使用了,则JVM会自动进行垃圾回收.</p>
-<p>相比传统Java对象的生命周期,Spring容器中Bean的生命周期就显得相对复杂多了.正确理解Spring Bean的生命周期非常重要,因为你或许要利用Spring提供的扩展点来自动鬼Bean的创建过程.<br><img src="http://pw2hcj78h.bkt.clouddn.com/imgs/doc/20180515001/Bean的生命周期.png" alt="Bean的生命周期图解"></p>
-<p>如上图,Bean在Spring容器中从创建到销毁经历了若干阶段:</p>
-<ol>
-<li>Spring通过反射机制对Bean进行实例化;</li>
-<li>Spring将值和Bean的引用注入到Bean对应的属性中.</li>
-<li>如果Bean实现了BeanNameAware接口,Spring将Bean的id传递给setBeanName()方法.</li>
-<li>如果Bean实现了BeanFactoryAware接口,Spring将调用setBeanFactory()方法,将BeanFactory容器实例传入.</li>
-<li>如果Bean实现了ApplicationContextAware接口,Spring将调用setApplicationContext()方法,将Bean所在的应用上下文的引用传入进来.</li>
-<li>如果Bean实现了BeanPostProcessor接口,Spring将调用postProcessBeforeInitialization()方法.</li>
-<li>如果Bean实现了InitializingBean接口,Spring将调用afterPropertiesSet()方法.类似在xml使用了init-method的方法,该方法也会被调用.</li>
-<li>如果Bean实现了BeanPostProcessor接口,Spring将调用postProcessAfterInitialization()方法.</li>
-<li>Bean已经准备就绪,可以被应用程序使用了,它们一直驻留在应用上下文中,直到该应用上下文被销毁.</li>
-<li>如果Bean实现了DisposableBean接口,Spring将调用它的destroy()方法.类似地,如果在xml使用了destroy-method声明了销毁方法,该方法也会被调用.</li>
+        <p>今天在家下载一个别人给我的百度网盘资料，资料大小差不多2个G,但是打开浏览器发现有一件是非常烦躁的事情:小文件可以直接在浏览器端进行下载,但是大文件必须下载百度网盘客户端进行下载.</p>
+<p>没办法,我只好去应用商店去下载百度网盘客户端,在深度应用商店还好找到了<a href="https://dstore-appstore.deepin.cn/china/category/internet/baidunetdisk" target="_blank" rel="noopener">百度网盘</a>的客户端(国产Deepin系统第三方软件源还是比较给力)。紧接着我就在客户端端登录下载,如下图:</p>
+<p><img src="http://pw2hcj78h.bkt.clouddn.com/imgs/doc/20190811001/web.png" alt="百度网盘客户端"></p>
+<p>用了客户端之后发现,下载速度特别慢,于是在网上找到一些解决方案:浏览器插件+第三方网络下载工具(Motrix/Aria2)进行下载.我这里采用Motrix方式,Aria2的方式读者可自行研究安装与使用。</p>
+<h2 id="安装与设置"><a href="#安装与设置" class="headerlink" title="安装与设置"></a>安装与设置</h2><ol>
+<li>安装浏览器插件<ol>
+<li>Motrix:在Chrome浏览器应用商店搜索百度网盘助手并下载安装。</li>
+<li>Aria2: 在Chrome浏览器应用商店搜索YAAW for Chrome并下载安装。</li>
 </ol>
+</li>
+<li>网络下载工具安装<ol>
+<li>Motrix: <a href="https://motrix.app/" target="_blank" rel="noopener">下载地址</a></li>
+<li>Aria2:<a href="https://aria2.github.io/" target="_blank" rel="noopener">下载地址</a></li>
+</ol>
+</li>
+</ol>
+<h2 id="使用体验"><a href="#使用体验" class="headerlink" title="使用体验"></a>使用体验</h2><p><img src="http://pw2hcj78h.bkt.clouddn.com/imgs/doc/20190811001/01.png" alt="百度网盘Web网页"></p>
+<p><img src="http://pw2hcj78h.bkt.clouddn.com/imgs/doc/20190811001/motrix.png" alt="Motrix下载"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由上可知,百度云网盘确实做了网速限制。虽然通过第三方下载工具提升了一些下载速度,但是下载还是有点慢，这个其实可以理解的，因为当下的网络是长城宽带，慢也是正常的。</p>
     </div>
     
         <div class="reward" ontouchstart="">
@@ -267,15 +254,10 @@
 
 <div class="article-nav prev-next-wrap clearfix">
     
-        <a href="/2018/05/17/Spring条件注解@Conditional/" class="pre-post btn btn-default" title="Spring条件注解@Conditional">
-            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-            <span class="hidden-xs">Spring条件注解@Conditional</span>
-        </a>
     
-    
-        <a href="/2018/05/10/数据结构之排序/" class="next-post btn btn-default" title="数据结构之排序">
+        <a href="/2019/06/09/魔都上海/" class="next-post btn btn-default" title="魔都上海">
             <span class="hidden-lg">下一篇</span>
-            <span class="hidden-xs">数据结构之排序</span><i class="fa fa-angle-right fa-fw"></i>
+            <span class="hidden-xs">魔都上海</span><i class="fa fa-angle-right fa-fw"></i>
         </a>
     
 </div>
@@ -309,7 +291,7 @@
     <div class="widget">
         <h3 class="title">文章目录</h3>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring容器"><span class="toc-text">Spring容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bean的生命周期"><span class="toc-text">Bean的生命周期</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装与设置"><span class="toc-text">安装与设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用体验"><span class="toc-text">使用体验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
         
     </div>
 </aside>
