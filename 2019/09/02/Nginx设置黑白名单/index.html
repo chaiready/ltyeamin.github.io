@@ -199,28 +199,24 @@
 <p>Nginx是在Deepin部署的，现在我们启动Nginx</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/nginx/sbin</span><br><span class="line">./nginx</span><br></pre></td></tr></table></figure>
 <p>1启动后，在宿主机随便访问一个请求(这里是我之前<a href="http://blog.yeamin.top/2018/06/18/%E5%B1%80%E5%9F%9F%E7%BD%91%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E4%B8%8E%E4%B8%8B%E8%BD%BD%E6%9C%8D%E5%8A%A1%E6%96%B0%E5%A7%BF%E5%8A%BF/" target="_blank" rel="noopener">文章配置</a>的静态图片资源的转发)，比如<a href="http://127.0.0.1或http://192.168.1.106" target="_blank" rel="noopener">http://127.0.0.1或http://192.168.1.106</a></p>
-<p><img src="http://pw2hcj78h.bkt.clouddn.com/imgs/doc/20180618001/nginx.png" alt="图片列表"></p>
+<p><img src="http://pz9h1gr1x.bkt.clouddn.com/imgs/doc/20180618001/nginx.png" alt="图片列表"></p>
 <p>此外，我们用Android手机和Windows 10虚拟机同样访问<a href="http://192.168.1.106也能访问到，手机和宿主机是同一个路由器，而虚拟机网络是桥接模式。所以是在同一局域网都能够互通。" target="_blank" rel="noopener">http://192.168.1.106也能访问到，手机和宿主机是同一个路由器，而虚拟机网络是桥接模式。所以是在同一局域网都能够互通。</a></p>
-<p><img src="http://pw2hcj78h.bkt.clouddn.com/imgs/doc/20190902001/Android.jpg" alt="Android显示效果"></p>
-<p><img src="http://pw2hcj78h.bkt.clouddn.com/imgs/doc/20190902001/Windows10.png" alt="Windows 10 虚拟机效果显示"></p>
+<p><img src="http://pz9h1gr1x.bkt.clouddn.com/imgs/doc/20190902001/Android.jpg" alt="Android显示效果"></p>
+<p><img src="http://pz9h1gr1x.bkt.clouddn.com/imgs/doc/20190902001/Windows10.png" alt="Windows 10 虚拟机效果显示"></p>
 <p>我们让手机无法访问，让虚拟机可以通过。</p>
 <h2 id="利用allow、deny参数进行访问限制"><a href="#利用allow、deny参数进行访问限制" class="headerlink" title="利用allow、deny参数进行访问限制"></a>利用allow、deny参数进行访问限制</h2><ol>
 <li><p>更改nginx.conf。</p>
-<p> location / {</p>
-<pre><code>deny 192.168.1.100;  #禁止IP为192.168.1.100访问
-allow all; # 除过上述黑名单的限制外，允许其他IP访问
-autoindex on;             #开启索引功能  
-autoindex_exact_size off; # 关闭计算文件确切大小（单位bytes），只显示大概大小（单位kb、mb、gb）  
-autoindex_localtime on;   # 显示本机时间而非 GMT 时间  
-</code></pre><p> }</p>
+ <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attribute">location</span> / &#123;</span><br><span class="line">    <span class="attribute">deny</span> <span class="number">192.168.1.100</span>;  <span class="comment">#禁止IP为192.168.1.100访问</span></span><br><span class="line">    <span class="attribute">allow</span> all; <span class="comment"># 除过上述黑名单的限制外，允许其他IP访问</span></span><br><span class="line">    <span class="attribute">autoindex</span> <span class="literal">on</span>;             <span class="comment">#开启索引功能  </span></span><br><span class="line">    <span class="attribute">autoindex_exact_size</span> <span class="literal">off</span>; <span class="comment"># 关闭计算文件确切大小（单位bytes），只显示大概大小（单位kb、mb、gb） </span></span><br><span class="line">    <span class="attribute">autoindex_localtime</span> <span class="literal">on</span>;   <span class="comment"># 显示本机时间而非 GMT 时间  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
+</ol>
+<ol start="2">
 <li><p>重新加载配置。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./nginx -s reload</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>黑名单限制效果。</p>
 </li>
 </ol>
-<p><img src="http://pw2hcj78h.bkt.clouddn.com/imgs/doc/20190902001/deny.jpg" alt="Android限制访问效果"></p>
+<p><img src="http://pz9h1gr1x.bkt.clouddn.com/imgs/doc/20190902001/deny.jpg" alt="Android限制访问效果"></p>
     </div>
     
         <div class="reward" ontouchstart="">
@@ -265,6 +261,11 @@ autoindex_localtime on;   # 显示本机时间而非 GMT 时间
 </article>
 
 <div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/10/12/【Python爬虫】使用Requests库爬取猫眼电影TOP100数据/" class="pre-post btn btn-default" title="【Python爬虫】使用Requests库爬取猫眼电影TOP100数据">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">【Python爬虫】使用Requests库爬取猫眼电影TOP100数据</span>
+        </a>
     
     
         <a href="/2019/09/01/Deepin Linux安装Docker/" class="next-post btn btn-default" title="Deepin Linux安装Docker">
