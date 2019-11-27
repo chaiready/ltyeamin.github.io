@@ -19,9 +19,11 @@
     <meta name="keywords" content="Zookeeper">
 
 
-    <meta name="description" content="1. 准备工作1. 安装JDK
-2. Zookeeper[安装包下载](https://archive.apache.org/dist/zookeeper/)，这里我选择3.5.6进行下载
-3....">
+    <meta name="description" content="1. 准备工作
+安装JDK
+Zookeeper安装包下载，这里我选择3.5.6进行下载
+准备三台机器，分别是192.168.5.1,192.168.5.100,192.168.5.101
+将zo...">
 
 
 
@@ -191,11 +193,13 @@
     </div>
     
     <div class="post-body post-content">
-        <h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h2><pre><code>1. 安装JDK
-2. Zookeeper[安装包下载](https://archive.apache.org/dist/zookeeper/)，这里我选择3.5.6进行下载
-3. 准备三台机器，分别是192.168.5.1,192.168.5.100,192.168.5.101
-4. 将zookeeper的安装包上传到这三台机器相同的目录上(方便管理)
-</code></pre><h2 id="2-开始搭建"><a href="#2-开始搭建" class="headerlink" title="2. 开始搭建"></a>2. 开始搭建</h2><h4 id="1）配置集群"><a href="#1）配置集群" class="headerlink" title="1）配置集群"></a>1）配置集群</h4><p>   在三台机器依次进行如下操作：</p>
+        <h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1. 准备工作"></a>1. 准备工作</h2><ol>
+<li>安装JDK</li>
+<li>Zookeeper<a href="https://archive.apache.org/dist/zookeeper/" target="_blank" rel="noopener">安装包下载</a>，这里我选择3.5.6进行下载</li>
+<li>准备三台机器，分别是192.168.5.1,192.168.5.100,192.168.5.101</li>
+<li>将zookeeper的安装包上传到这三台机器相同的目录上(方便管理)</li>
+</ol>
+<h2 id="2-开始搭建"><a href="#2-开始搭建" class="headerlink" title="2. 开始搭建"></a>2. 开始搭建</h2><h4 id="1）配置集群"><a href="#1）配置集群" class="headerlink" title="1）配置集群"></a>1）配置集群</h4><p>   在三台机器依次进行如下操作：</p>
 <ol>
 <li><p>解压Zookeeper，并创建data目录，另外将conf下的zoo_sample.cfg文件复制并改名为zoo.cfg</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf apache-zookeeper-3.5.6-bin.tar.gz</span><br><span class="line">cd apache-zookeeper-3.5.6-bin/</span><br><span class="line">mkdir data</span><br><span class="line">cp conf/zoo_sample.cfg conf/zoo.cfg</span><br></pre></td></tr></table></figure>
