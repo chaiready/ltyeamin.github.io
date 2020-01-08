@@ -1,5 +1,6 @@
 User-Agent: *
 Allow: /
+Allow: /tencent4568328591617558090.txt
 Disallow: /background
 Disallow: /css
 Disallow: /fancybox
