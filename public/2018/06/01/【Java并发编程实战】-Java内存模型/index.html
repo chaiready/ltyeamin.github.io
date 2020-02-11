@@ -384,7 +384,7 @@
 <li>为了解决一致性问题，各个处理器访问要遵循某些协议，在读写时要根据协议来进行操作，常见协议有:MSI、MESI、MOSI、Synapse、Firefly及Dragon Protocol等；</li>
 <li>除了增加高速缓存之外，为了使得处理器内部的运算单元尽量被充分利用，处理器会在不影响执行结果的条件下对输入的代码进行乱序执行，Java虚拟机定义为指令重排序。</li>
 </ul>
-<p><img src="http://q3j85ddid.bkt.clouddn.com/imgs/doc/20180601001/线程与主内存和工作内存三者之间的交互关系.png" alt="图1：处理器、高速缓存、主内存存在的交互关系"></p>
+<p><img src="http://q5j98c24z.bkt.clouddn.com/imgs/doc/20180601001/线程与主内存和工作内存三者之间的交互关系.png" alt="图1：处理器、高速缓存、主内存存在的交互关系"></p>
 <h2 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h2><p>Java内存模型（JMM）来屏蔽掉各种硬件和操作系统的内存访问差异，以实现Java程序在各种下都能达到一致的并发效果，在JDK1.5（实现了JSR-133）发布后，JMM已经成熟和完善起来。</p>
 <p>Java内存的主要目标是定义程序中的各个变量的访问规则，即虚拟机中将变量存储到内存和从内存中取出变量主要的底层实现，需要注意的是此变量非彼变量，这里的变量包括实例字段、静态字段、构成数组对象的元素，不包括局部变量与方法参数，因为后者是线程私有的，不会被共享，自然不存在竞争问题。</p>
 <h3 id="主内存与工作内存"><a href="#主内存与工作内存" class="headerlink" title="主内存与工作内存"></a>主内存与工作内存</h3><ol>
@@ -395,7 +395,7 @@
 <li><p>工作内存：线程对变量的所以操作都必须在工作内存中进行，不能直接读写到主内存中；</p>
 </li>
 <li><p>工作内存：线程间各自的工作内存不可见，数据传递操作在主内存来完成，如图2，线程、主内存、工作内存三者之间的交互关系。</p>
-<p><img src="http://q3j85ddid.bkt.clouddn.com/imgs/doc/20180601001/线程与主内存和工作内存三者的交互关系.png" alt="图2：线程、主内存、工作内存三者之间的交互关系"></p>
+<p><img src="http://q5j98c24z.bkt.clouddn.com/imgs/doc/20180601001/线程与主内存和工作内存三者的交互关系.png" alt="图2：线程、主内存、工作内存三者之间的交互关系"></p>
 </li>
 </ol>
 <h3 id="内存间原子操作"><a href="#内存间原子操作" class="headerlink" title="内存间原子操作"></a>内存间原子操作</h3><ul>
@@ -735,7 +735,7 @@
     <div class="content tag-cloud">
         
             <canvas width="300" height="300" id="tag-cloud-3d">
-                <a href="/tags/Docker/" style="font-size: 12.5px">Docker</a> <a href="/tags/JVM及并发编程/" style="font-size: 17.5px">JVM及并发编程</a> <a href="/tags/Java/" style="font-size: 15px">Java</a> <a href="/tags/JavaScript/" style="font-size: 20px">JavaScript</a> <a href="/tags/Jenkins/" style="font-size: 10px">Jenkins</a> <a href="/tags/Linux/" style="font-size: 15px">Linux</a> <a href="/tags/Maven/" style="font-size: 10px">Maven</a> <a href="/tags/Nginx/" style="font-size: 10px">Nginx</a> <a href="/tags/Primiere/" style="font-size: 10px">Primiere</a> <a href="/tags/Python/" style="font-size: 10px">Python</a> <a href="/tags/RabbitMQ/" style="font-size: 12.5px">RabbitMQ</a> <a href="/tags/RocketMQ/" style="font-size: 15px">RocketMQ</a> <a href="/tags/Samba/" style="font-size: 10px">Samba</a> <a href="/tags/Spring/" style="font-size: 15px">Spring</a> <a href="/tags/Spring-Boot/" style="font-size: 12.5px">Spring Boot</a> <a href="/tags/Spring-Cloud/" style="font-size: 15px">Spring Cloud</a> <a href="/tags/Team-Building/" style="font-size: 10px">Team Building</a> <a href="/tags/Zookeeper/" style="font-size: 10px">Zookeeper</a> <a href="/tags/二叉树/" style="font-size: 10px">二叉树</a> <a href="/tags/实用工具及技巧/" style="font-size: 17.5px">实用工具及技巧</a> <a href="/tags/排序算法/" style="font-size: 10px">排序算法</a> <a href="/tags/杂谈/" style="font-size: 10px">杂谈</a> <a href="/tags/自媒体/" style="font-size: 10px">自媒体</a> <a href="/tags/计算机网络/" style="font-size: 15px">计算机网络</a>
+                <a href="/tags/Docker/" style="font-size: 12.5px">Docker</a> <a href="/tags/JVM及并发编程/" style="font-size: 17.5px">JVM及并发编程</a> <a href="/tags/Java/" style="font-size: 15px">Java</a> <a href="/tags/JavaScript/" style="font-size: 20px">JavaScript</a> <a href="/tags/Jenkins/" style="font-size: 10px">Jenkins</a> <a href="/tags/Linux/" style="font-size: 15px">Linux</a> <a href="/tags/Maven/" style="font-size: 10px">Maven</a> <a href="/tags/Nginx/" style="font-size: 10px">Nginx</a> <a href="/tags/Primiere/" style="font-size: 10px">Primiere</a> <a href="/tags/Python/" style="font-size: 10px">Python</a> <a href="/tags/RabbitMQ/" style="font-size: 12.5px">RabbitMQ</a> <a href="/tags/RocketMQ/" style="font-size: 15px">RocketMQ</a> <a href="/tags/Samba/" style="font-size: 10px">Samba</a> <a href="/tags/Spring/" style="font-size: 15px">Spring</a> <a href="/tags/Spring-Boot/" style="font-size: 12.5px">Spring Boot</a> <a href="/tags/Spring-Cloud/" style="font-size: 15px">Spring Cloud</a> <a href="/tags/Team-Building/" style="font-size: 10px">Team Building</a> <a href="/tags/Vue/" style="font-size: 12.5px">Vue</a> <a href="/tags/Zookeeper/" style="font-size: 10px">Zookeeper</a> <a href="/tags/webpack/" style="font-size: 10px">webpack</a> <a href="/tags/二叉树/" style="font-size: 10px">二叉树</a> <a href="/tags/实用工具及技巧/" style="font-size: 17.5px">实用工具及技巧</a> <a href="/tags/排序算法/" style="font-size: 10px">排序算法</a> <a href="/tags/杂谈/" style="font-size: 10px">杂谈</a> <a href="/tags/自媒体/" style="font-size: 10px">自媒体</a> <a href="/tags/计算机网络/" style="font-size: 15px">计算机网络</a>
             </canvas>
         
     </div>
