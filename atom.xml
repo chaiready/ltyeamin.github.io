@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://ltyeamin.github.io/"/>
-  <updated>2020-03-01T04:33:40.565Z</updated>
+  <updated>2020-03-01T04:53:52.879Z</updated>
   <id>http://ltyeamin.github.io/</id>
   
   <author>
@@ -15,31 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>Photoshop图像基本处理</title>
-    <link href="http://ltyeamin.github.io/2020/02/29/Photoshop%E5%9B%BE%E5%83%8F%E5%9F%BA%E6%9C%AC%E5%A4%84%E7%90%86/"/>
-    <id>http://ltyeamin.github.io/2020/02/29/Photoshop图像基本处理/</id>
-    <published>2020-02-29T10:19:23.000Z</published>
-    <updated>2020-03-01T04:33:40.565Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h1 id="1-Photoshop介绍"><a href="#1-Photoshop介绍" class="headerlink" title="1. Photoshop介绍"></a>1. Photoshop介绍</h1><p>Adobe Photoshop，简称“PS”，是由Adobe Systems开发和发行的图像处理软件。</p><p>Photoshop主要处理以像素所构成的数字图像。使用其众多的编修与绘图工具，可以有效地进行图片编辑工作。ps有很多功能，在图像、图形、文字、视频、出版等各方面都有涉及。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot; cla
-      
-    
-    </summary>
-    
-      <category term="video-cut" scheme="http://ltyeamin.github.io/categories/video-cut/"/>
-    
-    
-      <category term="Primiere" scheme="http://ltyeamin.github.io/tags/Primiere/"/>
-    
-  </entry>
   
   <entry>
     <title>前端构建工具webpack入门</title>
@@ -513,6 +488,31 @@
     
     
       <category term="实用工具及技巧" scheme="http://ltyeamin.github.io/tags/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7%E5%8F%8A%E6%8A%80%E5%B7%A7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>魔都上海</title>
+    <link href="http://ltyeamin.github.io/2019/06/09/%E9%AD%94%E9%83%BD%E4%B8%8A%E6%B5%B7/"/>
+    <id>http://ltyeamin.github.io/2019/06/09/魔都上海/</id>
+    <published>2019-06-09T04:57:10.000Z</published>
+    <updated>2020-02-11T11:35:45.575Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="/assets/css/APlayer.min.css"><script src="/assets/js/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="/assets/js/Meting.min.js"></script><h2 id="上海宣传片"><a href="#上海宣传片" class="headerlink" title="上海宣传片"></a>上海宣传片</h2><p><link class="dplayer-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.css"></p><script src="https://www.zhyong.cn/assets/js/DPlayer.min.js"></script><div id="dplayer0"></div><br><br><br><div id="dplayer1"></div><script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script><script>const dp0 = new DPlayer({    container: document.getElementById('dplayer0'),    screenshot: true,    video: {        url: 'http://q5j98c24z.bkt.clouddn.com/videos/lvyou/shanghai2.mp4'    },    subtitle: {        url: 'webvtt.vtt'    },    danmaku: {        id: 'demo',        api: 'https://api.prprpr.me/dplayer/'    }});const dp1 = new DPlayer({    container: document.getElementById('dplayer1'),    screenshot: true,    video: {        url: 'http://q5j98c24z.bkt.clouddn.com/videos/lvyou/shanghai1.mp4'    },    subtitle: {        url: 'webvtt.vtt'    },    danmaku: {        id: 'demo',        api: 'https://api.prprpr.me/dplayer/'    }});</script>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;/assets/css/APlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot; cla
+      
+    
+    </summary>
+    
+      <category term="others" scheme="http://ltyeamin.github.io/categories/others/"/>
+    
+    
+      <category term="自媒体" scheme="http://ltyeamin.github.io/tags/%E8%87%AA%E5%AA%92%E4%BD%93/"/>
     
   </entry>
   
